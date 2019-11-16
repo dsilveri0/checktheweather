@@ -11,6 +11,7 @@ window.onload = () => {
                 document.getElementById("temp").innerHTML = json.main.temp.toFixed(0) + " ºC";
                 document.getElementById("icon").setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
                 document.getElementById("weather-description").innerHTML = json.weather[0].description;
+                document.getElementById("city").innerHTML = json.name;
             } else {
                 console.log('error msg: ' + xhr.status);
             }
