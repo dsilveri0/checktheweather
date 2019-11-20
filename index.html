@@ -16,7 +16,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -32,33 +32,58 @@
                     <a class="nav-link" href="#">Favoritos</a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </nav>
     <div class="jumbotron jumbotron-fluid">
         <div class="container text-center">
-            <h1 class="display-4">Check the weather</h1>
-            <p class="lead">Uma aplicação de meteorologia!</p>
-        </div>
+            <h1 class="display-4">Check the weather!</h1>
+            <p class="lead">Comece j&aacute; a pesquisar!</p>
+	</div>
+	<div class="container-fluid text-center">
+	    <div class="row">
+		    <div class="col-md-3 col-sm-1 col-xs"></div>
+	       	    <div class="col-md-6 col-sm-10 col-xs-11">
+		    	<div class="input-group mb-3">
+				<input class="form-control input-lg search-bar-city" type="text" placeholder="Pesquise uma cidade">
+				<div class="">
+					<button class="btn btn-outline-success search-button-city" type="button">Pesquisar</button>
+				</div>
+	    		</div>
+		    </div>
+		    <div class="col-md-3 col-sm-1 col-xs"></div>
+	    </div>
+	</div>
     </div>
     <div class="container-fluid">
+	<div class="row">
+	    <div class="col-xs-2 col-sm-2 col-md-2"></div>
+	    <div class="col-xs-8 col-sm-8 col-md-8">
+		    <!-- <p class="text-center">Pesquise e adicione 6 cidades &agrave; sua p&aacute;gina principal!</p> -->
+	    </div>
+	    <div class="col-xs-2 col-sm-2 col-md-2"></div>
+	</div>
         <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-                <div>
+            <div class="col-xs col-sm-2 col-md-3 cityrow"></div>
+            <div class="col-xs col-sm-4 col-md-3 cityrow">
+                <div class="citycard text-center">
                     <h4 id="city"></h4>
                     <img id="icon" src="">
                     <p id="temp"></p>
-                    <p id="weather-description"></p>
+		    <p id="weather-description"></p>
                 </div>
             </div>
-            <div class="col-sm"></div>
+            <div class="col-xs col-sm-4 col-md-3 cityrow">
+		<div class="citycard text-center">
+		    <!-- <h4 id="city2"></h4>
+		    <img id="icon2" src="">
+		    <p id="temp2"></p>
+		    <p id="weather-description2"></p> -->
+		</div>
+	    </div>
+	    <div class="col-xs col-sm-2 col-md-3 cityrow"></div>
         </div>
     </div>
-    
+
     <script src="main.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
