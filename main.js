@@ -1,7 +1,6 @@
 window.onload = () => {
     getWeather("lisboa", "pt", "");
     getWeather("porto", "pt", "2");
-
     document.querySelector(".search-bar-city").value = "";
 }
 
@@ -44,6 +43,7 @@ function findCity(city) {
         if (req.readyState === 4) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
+
                 displaySearchResults(json);
 
             } else {
@@ -56,25 +56,36 @@ function findCity(city) {
 
 function searchBar() {
     let search;
+
     search = document.querySelector(".search-bar-city").value;
     findCity(search);
-
 }
 document.querySelector(".search-button-city").addEventListener("click", searchBar);
 
+function spawnSearchResults() {
+    $('.modal').modal('show');
+}
+
+
 function displaySearchResults(data) {
+    spawnSearchResults()
     let contentVerifier = document.querySelector(".searchList").innerHTML;
 
     if(contentVerifier == "") {
+
         fillFieldsSearchResults(data);
+
     } else {
-        clearSearchResults();
+
+        clearSearchResults('groupData');
         fillFieldsSearchResults(data);
+
     }
 }
 
 function fillFieldsSearchResults(data) {
     for(let i = 0; i<data.list.length; i++) {
+
         let searchResult = `
             <div class="groupData">
                 <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country}</p>
@@ -88,8 +99,9 @@ function fillFieldsSearchResults(data) {
     }
 }
 
-function clearSearchResults() {
-    let elem = document.getElementsByClassName('groupData');
+function clearSearchResults(className) {
+    let elem = document.getElementsByClassName(className);
+
     while(elem[0]) {
         elem[0].parentNode.removeChild(elem[0]);
     }
