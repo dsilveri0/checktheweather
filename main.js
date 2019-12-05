@@ -1,6 +1,8 @@
 window.onload = () => {
     getWeather("lisboa", "pt", "");
     getWeather("porto", "pt", "2");
+    
+    document.querySelector(".search-bar-city").value = "";
 }
 
 function getWeather(city, country, value) {
@@ -62,3 +64,8 @@ function searchBar() {
 
 }
 document.querySelector(".search-button-city").addEventListener("click", searchBar);
+
+// Call this function inside the findCity fucntion.
+function displaySearchResults() {
+    // This function must display the search results on the page.
+}
