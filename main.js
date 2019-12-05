@@ -69,18 +69,23 @@ document.querySelector(".search-button-city").addEventListener("click", searchBa
 // Call this function inside the findCity fucntion.
 function displaySearchResults(data) {
     // This function must display the search results on the page.
+
+    // Verificar se parente tem filhos, e caso tenha limpar, para então mostrar resultados da nova pesquisa.
+    if (searchList.hasChildNodes()) {
+        
+    }
+
     for(let i = 0; i<data.list.length; i++) {
-        console.log(data.list[i].name);
-        console.log(data.list[i].sys.country);
-        console.log("lat: " + data.list[i].coord.lat);
-        console.log("lon: " + data.list[i].coord.lon);
-        console.log("temp" + data.list[i].main.temp);
-        console.log(data.list[i].weather[0].description);
 
-        document.getElementById("cityCountry5").textContent = `${data.list[i].name}, ${data.list[i].sys.country}`;
-        document.getElementById("coords5").textContent = `Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon}`;
-        document.getElementById("temp5").textContent = `Temp: ${data.list[i].main.temp.toFixed(0)} ºC`;
-        document.getElementById("description5").textContent = data.list[i].weather[0].description;
-
+        let searchResult = `
+            <div class="groupData">
+                <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country}</p>
+                <p id="coords5">Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon}</p>
+                <p id="temp5">Temp: ${data.list[i].main.temp.toFixed(0)} ºC</p>
+                <p id="description5">${data.list[i].weather[0].description}</p>
+                <hr />
+            </div>
+        `;
+        document.querySelector(".searchList").insertAdjacentHTML('beforeend', searchResult);
     }
 }
