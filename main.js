@@ -1,6 +1,7 @@
 window.onload = () => {
     getWeather("lisboa", "pt", "");
     getWeather("porto", "pt", "2");
+
     document.querySelector(".search-bar-city").value = "";
 }
 
@@ -44,6 +45,7 @@ function findCity(city) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
+                console.log(json);
                 displaySearchResults(json);
 
             } else {
@@ -87,12 +89,21 @@ function fillFieldsSearchResults(data) {
     for(let i = 0; i<data.list.length; i++) {
 
         let searchResult = `
-            <div class="groupData">
-                <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country}</p>
-                <p id="coords5">Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon}</p>
-                <p id="temp5">Temp: ${data.list[i].main.temp.toFixed(0)} ºC</p>
-                <p id="description5">${data.list[i].weather[0].description}</p>
-                <hr />
+            <div class="searchResults">
+                <div class="row">
+                    <div class="col-xs-3 col-sm-2 col-md-2">
+                        <div class="groupData">
+                            <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png">
+                        </div>
+                    </div>
+                    <div class="col-xs-9 col-sm-10 col-md-10">
+                        <div class="groupData" style="border-bottom: 1px solid #A9A9A9">
+                            <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country} (Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon})</p>
+                            <p id="temp5">Temperatura: ${data.list[i].main.temp.toFixed(0)} ºC</p>
+                            <p id="description5">Previsão: ${data.list[i].weather[0].description}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
         document.querySelector(".searchList").insertAdjacentHTML('beforeend', searchResult);
