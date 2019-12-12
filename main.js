@@ -1,11 +1,13 @@
+let contador = 0;
+
 window.onload = () => {
-    getWeather("lisboa", "pt", "");
-    getWeather("porto", "pt", "2");
+    getWeather("lisboa", "pt", true);
+    getWeather("porto", "pt", true);
 
     document.querySelector(".search-bar-city").value = "";
 }
 
-function getWeather(city, country, value) {
+function getWeather(city, country, verifier) {
     const API_URL = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
@@ -15,7 +17,7 @@ function getWeather(city, country, value) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                fillFieldsMainPage(json, value);
+                verifier ? fillFieldsMainPage(json) : "";
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -25,13 +27,17 @@ function getWeather(city, country, value) {
     req.send();
 }
 
-function fillFieldsMainPage(data, i) {
+function fillFieldsMainPage(data) {
     let icon = data.weather[0].icon;
 
-    document.getElementById("temp"+i).innerHTML = data.main.temp.toFixed(0) + " ºC";
-    document.getElementById("icon"+i).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
-    document.getElementById("weather-description"+i).innerHTML = data.weather[0].description;
-    document.getElementById("city"+i).innerHTML = data.name;
+    creatorTemplateCards();
+
+    document.getElementById(`city${contador}`).innerHTML = data.name;
+    document.getElementById(`icon${contador}`).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
+    document.getElementById(`temp${contador}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
+    document.getElementById(`weather-description${contador}`).innerHTML = data.weather[0].description;
+
+    console.log("contador");
 
 }
 
@@ -45,7 +51,6 @@ function findCity(city) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                console.log(json);
                 displaySearchResults(json);
 
             } else {
@@ -126,7 +131,6 @@ function fillFieldsSearchResults(data) {
 
 function insertCityOnFavorites() {
 
-    // Retrieving City name.
     data = document.querySelector(".favBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
     
     let city = data.split(',').slice(0,1)
@@ -135,19 +139,27 @@ function insertCityOnFavorites() {
     console.log(city);
     console.log(country);
 
-    getWeather(city, country, "6")
+    creatorTemplateCards();
+    getWeather(city, country, true);
 
-    let newElement = `
-    <div class="card citycard text-center">
-        <div class="card-body">
-            <h4 id="city6" class="card-title"></h4>
-            <img id="icon6" src="">
-            <p id="temp6" class="card-text"></p>
-            <p id="weather-description6" class="card-text"></p>
+}
+
+function creatorTemplateCards() {
+
+let newElement = `
+    <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
+        <div class="card citycard text-center">
+            <div class="card-body">
+                <h4 id="city${contador}" class="card-title"></h4>
+                <img id="icon${contador}" src="">
+                <p id="temp${contador}" class="card-text"></p>
+                <p id="weather-description${contador}" class="card-text"></p>
+            </div>
         </div>
     </div>
     `
-    document.querySelector(".testingDiv").insertAdjacentHTML('afterbegin', newElement);
+    contador = contador + 1;
+    document.querySelector(".testingDiv").insertAdjacentHTML("beforeend", newElement);
 }
 
 function clearSearchResults(className) {
