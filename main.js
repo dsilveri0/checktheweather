@@ -76,11 +76,17 @@ function displaySearchResults(data) {
     if(contentVerifier == "") {
 
         fillFieldsSearchResults(data);
+        
+        favorite = document.querySelector(".favBtn");
+        favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
 
     } else {
 
         clearSearchResults('groupData');
         fillFieldsSearchResults(data);
+
+        favorite = document.querySelector(".favBtn");
+        favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
 
     }
 }
@@ -109,13 +115,39 @@ function fillFieldsSearchResults(data) {
                         </div>
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
-                        <i class="far fa-star fa-2x center groupData" style="margin:auto;"></i>
+                        <i class="far fa-star fa-2x center groupData favBtn" style="margin:auto;"></i>
                     </div>
                 </div>
             </div>
         `;
         document.querySelector(".searchList").insertAdjacentHTML('beforeend', searchResult);
     }
+}
+
+function insertCityOnFavorites() {
+
+    // Retrieving City name.
+    data = document.querySelector(".favBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
+    
+    let city = data.split(',').slice(0,1)
+    let country = data.split(' ').slice(1,2)
+
+    console.log(city);
+    console.log(country);
+
+    getWeather(city, country, "6")
+
+    let newElement = `
+    <div class="card citycard text-center">
+        <div class="card-body">
+            <h4 id="city6" class="card-title"></h4>
+            <img id="icon6" src="">
+            <p id="temp6" class="card-text"></p>
+            <p id="weather-description6" class="card-text"></p>
+        </div>
+    </div>
+    `
+    document.querySelector(".testingDiv").insertAdjacentHTML('afterbegin', newElement);
 }
 
 function clearSearchResults(className) {
