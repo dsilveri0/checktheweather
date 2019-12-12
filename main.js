@@ -86,22 +86,30 @@ function displaySearchResults(data) {
 }
 
 function fillFieldsSearchResults(data) {
+    let innerWith = window.innerWidth;
+    let marginStar;
+    
     for(let i = 0; i<data.list.length; i++) {
+        
+        innerWith > 575 ? marginStar = "auto" : marginStar = "15px";
 
         let searchResult = `
             <div class="searchResults">
-                <div class="row">
-                    <div class="col-xs-3 col-sm-2 col-md-2">
+                <div class="row groupData" style="border-bottom: 1px solid #A9A9A9">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
                         <div class="groupData">
-                            <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png">
+                            <img style="margin:auto;" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png">
                         </div>
                     </div>
-                    <div class="col-xs-9 col-sm-10 col-md-10">
-                        <div class="groupData" style="border-bottom: 1px solid #A9A9A9">
+                    <div class="col-xs-7 col-sm-6 col-md-7 col-lg-8">
+                        <div class="groupData style="margin:auto;"">
                             <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country} (Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon})</p>
                             <p id="temp5">Temperatura: ${data.list[i].main.temp.toFixed(0)} ºC</p>
                             <p id="description5">Previsão: ${data.list[i].weather[0].description}</p>
                         </div>
+                    </div>
+                    <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
+                        <i class="far fa-star fa-2x center groupData" style="margin:auto;"></i>
                     </div>
                 </div>
             </div>
