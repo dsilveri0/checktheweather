@@ -14,7 +14,7 @@ window.onload = () => {
 }
 
 function getWeather(city, country, verifier) {
-    const API_URL = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
     req.open('GET', API_URL);
