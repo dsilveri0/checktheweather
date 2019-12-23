@@ -2,7 +2,7 @@ let contador = 0;
 
 window.onload = () => {
     getWeather("lisboa", "pt", true);
-    getWeather("porto", "pt", true);
+    getWeather("Porto", "pt", true);
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
