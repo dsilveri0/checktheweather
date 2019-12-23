@@ -84,24 +84,30 @@ function spawnSearchResults() {
 
 function displaySearchResults(data) {
     spawnSearchResults()
+
     let contentVerifier = document.querySelector(".searchList").innerHTML;
 
-    if(contentVerifier == "") {
-
-        fillFieldsSearchResults(data);
+    if (data.count != 0) {
+        if(contentVerifier == "") {
+            
+            callFillAndAddListener(data);
         
-        favorite = document.querySelector(".favBtn");
-        favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
-       
-    } else {
+        } else if(contentVerifier != ""){
+            
+            callFillAndAddListener(data);
 
-        clearSearchResults('groupData');
-        fillFieldsSearchResults(data);
-
-        favorite = document.querySelector(".favBtn");
-        favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
-
+        }
+    } else if (data.count == 0) {
+        document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData">Cidade não encontrada!</p>`;
     }
+}
+
+function callFillAndAddListener(data) {
+    clearSearchResults('groupData');
+    fillFieldsSearchResults(data);
+    
+    favorite = document.querySelector(".homeBtn");
+    favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
 }
 
 function fillFieldsSearchResults(data) {
@@ -128,6 +134,7 @@ function fillFieldsSearchResults(data) {
                         </div>
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
+                        <i class="fas fa-home fa-2x center groupData homeBtn" style="margin:auto;"></i>
                         <i class="far fa-star fa-2x center groupData favBtn" style="margin:auto;"></i>
                     </div>
                 </div>
@@ -139,10 +146,12 @@ function fillFieldsSearchResults(data) {
 
 function insertCityOnFavorites() {
 
-    data = document.querySelector(".favBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
+    data = document.querySelector(".homeBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
     
     let city = data.split(',').slice(0,1)
     let country = data.split(' ').slice(1,2)
+
+    //console.log(`${city}, ${country}`);
 
     getWeather(city, country, true);
 
@@ -151,6 +160,7 @@ function insertCityOnFavorites() {
 function addDataToStorage() {
 // Adds data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
 // May be called when adding a city to the main page, and or the favorites tab.
+
 
 
 }
