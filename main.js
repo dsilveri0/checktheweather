@@ -4,6 +4,12 @@ window.onload = () => {
     getWeather("lisboa", "pt", true);
     getWeather("porto", "pt", true);
 
+    document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("button-addon2").click();
+        }
+    });
     document.querySelector(".search-bar-city").value = "";
 }
 
@@ -28,17 +34,19 @@ function getWeather(city, country, verifier) {
 }
 
 function fillFieldsMainPage(data) {
-    let icon = data.weather[0].icon;
+    if (contador < 6) {
+        let icon = data.weather[0].icon;
 
-    creatorTemplateCards();
+        creatorTemplateCards();
+        
+        console.log("THIS IS THE COUNTER: " + contador);
+        document.getElementById(`city${contador-1}`).innerHTML = data.name;
+        document.getElementById(`icon${contador-1}`).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
+        document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
+        document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
 
-    document.getElementById(`city${contador}`).innerHTML = data.name;
-    document.getElementById(`icon${contador}`).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
-    document.getElementById(`temp${contador}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
-    document.getElementById(`weather-description${contador}`).innerHTML = data.weather[0].description;
-
-    console.log("contador");
-
+    }
+    // Criar sistema para notificar o utilizador caso não tenha mais espaços disponiveis para adicionar cidades.
 }
 
 function findCity(city) {
@@ -84,7 +92,7 @@ function displaySearchResults(data) {
         
         favorite = document.querySelector(".favBtn");
         favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
-
+       
     } else {
 
         clearSearchResults('groupData');
@@ -136,11 +144,20 @@ function insertCityOnFavorites() {
     let city = data.split(',').slice(0,1)
     let country = data.split(' ').slice(1,2)
 
-    console.log(city);
-    console.log(country);
-
-    creatorTemplateCards();
     getWeather(city, country, true);
+
+}
+
+function addDataToStorage() {
+// Adds data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
+// May be called when adding a city to the main page, and or the favorites tab.
+
+
+}
+
+function removeDataFromStorage() {
+// Removes data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
+// May be called when deleting cites from the local storage.
 
 }
 
