@@ -28,7 +28,6 @@ function getWeather(city, country, verifier, defaults) {
                 let json = JSON.parse(req.responseText);
 
                 verifier ? fillFieldsMainPage(json, defaults) : "";
-                console.log(json);
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -57,8 +56,6 @@ function fillFieldsMainPage(data, defaults) {
 function insertCitiesFromLocalStorage() {
     let retrievedData = localStorage.getItem("mainPageCities");
     let citiesStorage = JSON.parse(retrievedData);
-
-    console.log(citiesStorage);
 
     for(let i = 0; i < citiesStorage.length; i++) {
         getWeather(citiesStorage[i].city, citiesStorage[i].country, true, false);
@@ -167,15 +164,11 @@ function insertCityOnFavorites() {
     let city = data.split(',').slice(0,1)
     let country = data.split(' ').slice(1,2)
 
-    //console.log(`${city}, ${country}`);
-
     getWeather(city, country, true, false);
 
 }
 
 function addMainPageDataToStorage(cityName, countryName) {
-// Adds data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
-// May be called when adding a city to the main page, and or the favorites tab.
 
     let jsObj = {city: cityName, country: countryName};
     arrayMainPageData.push(jsObj);
