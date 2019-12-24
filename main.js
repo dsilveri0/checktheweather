@@ -152,8 +152,8 @@ function fillFieldsSearchResults(data) {
                         </div>
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
-                        <i class="fas fa-home fa-2x center groupData homeBtn" style="margin:auto;"></i>
-                        <i class="far fa-star fa-2x center groupData favBtn" style="margin:auto;"></i>
+                        <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn"></i>
+                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn"></i>
                     </div>
                 </div>
             </div>

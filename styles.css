@@ -25,3 +25,20 @@ footer {
 .jumbotron-fluid {
     background-color: #e4e4e4!important;
 }
+
+.buttonsResults {
+    margin: auto 5px!important;
+    color: #4e4e4e;
+}
+
+.buttonsResults:hover {
+    cursor: pointer;    
+}
+
+.homeBtn:hover {
+    color: #2dff38ab;
+}
+
+.favBtn:hover {
+    color: #ffe602;
+}
