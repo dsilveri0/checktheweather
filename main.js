@@ -119,8 +119,13 @@ function callFillAndAddListener(data) {
     clearSearchResults('groupData');
     fillFieldsSearchResults(data);
     
-    favorite = document.querySelector(".homeBtn");
-    favorite == null || favorite == undefined ? favorite = "" : favorite.addEventListener("click", insertCityOnFavorites);
+    //homeSelector = document.querySelector(".homeBtn");
+
+    homeSelector = document.getElementsByClassName("homeBtn");
+
+    for(let i = 0; i < homeSelector.length; i++) {
+        homeSelector[i] == null || homeSelector[i] == undefined ? homeSelector[i] = "" : homeSelector[i].addEventListener("click", insertCityOnMainPage);
+    }
 }
 
 function fillFieldsSearchResults(data) {
@@ -157,7 +162,7 @@ function fillFieldsSearchResults(data) {
     }
 }
 
-function insertCityOnFavorites() {
+function insertCityOnMainPage() {
 
     data = document.querySelector(".homeBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
     
