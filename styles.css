@@ -1,0 +1,8 @@
+.card:hover {
+    border: 3px solid #474747;
+    cursor: pointer;
+}
+
+.card-body:hover {
+    opacity: 0.1;
+}
