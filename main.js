@@ -50,6 +50,33 @@ function fillFieldsMainPage(data, defaults) {
 
         defaults ? "" : addMainPageDataToStorage(data.name, data.sys.country);
 
+        addBtnsMouseOverMainPage();
+    }
+}
+
+function addBtnsMouseOverMainPage() {
+
+    let newButtons = document.getElementsByClassName("card");
+    
+    for(let i = 0; i < newButtons.length; i++) {
+        newButtons[i].addEventListener("mouseover", () => {
+            //newButtons[i].style.backgroundColor = "red";
+
+            let newHTML = `
+                <div class="buttonsCards">
+                    <button>Detalhes</button>
+                    <button>Forecast</button>
+                </div>
+            `;
+            newButtons[i].innerHTML += newHTML;
+
+            let cards = document.getElementsByClassName("buttonsCards");
+            console.log(cards);
+
+        });
+        newButtons[i].addEventListener("mouseout", () => {
+            newButtons[i].style.backgroundColor = "";
+        });
     }
 }
 
@@ -118,8 +145,6 @@ function displaySearchResults(data) {
 function callFillAndAddListener(data) {
     clearSearchResults('groupData');
     fillFieldsSearchResults(data);
-    
-    //homeSelector = document.querySelector(".homeBtn");
 
     homeSelector = document.getElementsByClassName("homeBtn");
 
