@@ -43,7 +43,7 @@ function fillFieldsMainPage(data, defaults) {
 
         creatorTemplateCards();
         
-        document.getElementById(`city${contador-1}`).innerHTML = data.name;
+        document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
         document.getElementById(`icon${contador-1}`).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
@@ -124,7 +124,9 @@ function callFillAndAddListener(data) {
     homeSelector = document.getElementsByClassName("homeBtn");
 
     for(let i = 0; i < homeSelector.length; i++) {
-        homeSelector[i] == null || homeSelector[i] == undefined ? homeSelector[i] = "" : homeSelector[i].addEventListener("click", insertCityOnMainPage);
+        homeSelector[i] == null || homeSelector[i] == undefined ? homeSelector[i] = "" : homeSelector[i].addEventListener("click", () => {
+            insertCityOnMainPage(i);
+        });
     }
 }
 
@@ -162,10 +164,11 @@ function fillFieldsSearchResults(data) {
     }
 }
 
-function insertCityOnMainPage() {
-
-    data = document.querySelector(".homeBtn").parentNode.parentNode.previousSibling.nextElementSibling.innerText;
+function insertCityOnMainPage(index) {
     
+    elem = document.getElementsByClassName("homeBtn");
+    data = elem[index].parentNode.parentNode.previousSibling.nextElementSibling.innerText;
+
     let city = data.split(',').slice(0,1)
     let country = data.split(' ').slice(1,2)
 
