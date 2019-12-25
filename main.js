@@ -50,34 +50,26 @@ function fillFieldsMainPage(data, defaults) {
 
         defaults ? "" : addMainPageDataToStorage(data.name, data.sys.country);
 
-        addBtnsMouseOverMainPage();
+        addEventListenerToBtns();
     }
 }
 
-function addBtnsMouseOverMainPage() {
 
+function addEventListenerToBtns() {
     let newButtons = document.getElementsByClassName("card");
     
-    for(let i = 0; i < newButtons.length; i++) {
-        newButtons[i].addEventListener("mouseover", () => {
-            //newButtons[i].style.backgroundColor = "red";
-
-            let newHTML = `
-                <div class="buttonsCards">
-                    <button>Detalhes</button>
-                    <button>Forecast</button>
-                </div>
-            `;
-            newButtons[i].innerHTML += newHTML;
-
-            let cards = document.getElementsByClassName("buttonsCards");
-            console.log(cards);
-
-        });
-        newButtons[i].addEventListener("mouseout", () => {
-            newButtons[i].style.backgroundColor = "";
-        });
+    for(let i = 0; i < newButtons.length; i++){ 
+        newButtons[i].addEventListener("mouseover", makeButtonsAppear);
+        newButtons[i].addEventListener("mouseout", makeButtonsDisappear);
     }
+}
+
+function makeButtonsAppear() {
+    document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "";
+}
+
+function makeButtonsDisappear() {
+    document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
 }
 
 function insertCitiesFromLocalStorage() {
@@ -221,6 +213,10 @@ function creatorTemplateCards() {
 let newElement = `
     <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
         <div class="card citycard text-center">
+            <div class="buttonGroupCardsDIV${contador}" style="display:none">
+                <button class="btn btn-secondary buttonGroupCards">Detalhes</button>
+                <button class="btn btn-secondary buttonGroupCards">Forecast</button>
+            </div>
             <div class="card-body">
                 <h4 id="city${contador}" class="card-title"></h4>
                 <img id="icon${contador}" src="">
