@@ -44,7 +44,7 @@ function fillFieldsMainPage(data, defaults) {
         creatorTemplateCards();
         
         document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
-        document.getElementById(`icon${contador-1}`).setAttribute("src", `http://openweathermap.org/img/wn/${icon}@2x.png`);
+        document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
 
@@ -65,11 +65,13 @@ function addEventListenerToBtns() {
 }
 
 function makeButtonsAppear() {
-    document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "";
+        let number = this.classList[3];
+        document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
 }
 
 function makeButtonsDisappear() {
-    document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
+    let number = this.classList[3];
+    document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "none";
 }
 
 function insertCitiesFromLocalStorage() {
@@ -160,7 +162,7 @@ function fillFieldsSearchResults(data) {
                 <div class="row groupData" style="border-bottom: 1px solid #A9A9A9">
                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
                         <div class="groupData">
-                            <img style="margin:auto;" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png">
+                            <img style="margin:auto;" src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png">
                         </div>
                     </div>
                     <div class="col-xs-7 col-sm-6 col-md-7 col-lg-8">
@@ -212,12 +214,18 @@ function creatorTemplateCards() {
 
 let newElement = `
     <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
-        <div class="card citycard text-center">
-            <div class="buttonGroupCardsDIV${contador}" style="display:none">
-                <button class="btn btn-secondary buttonGroupCards">Detalhes</button>
-                <button class="btn btn-secondary buttonGroupCards">Forecast</button>
-            </div>
+        <div class="card citycard text-center ${contador}">
             <div class="card-body">
+                <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
+                    <div class="row">
+                        <div class="col-xs col-sm col-md col-lg">
+                            <button class="btn btn-secondary buttonGroupCards">Detalhes</button>
+                        </div>
+                        <div class="col-xs col-sm col-md col-lg">
+                            <button class="btn btn-secondary buttonGroupCards">Forecast</button>
+                        </div>
+                    </div>
+                </div>
                 <h4 id="city${contador}" class="card-title"></h4>
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>
