@@ -44,16 +44,41 @@ footer {
 .buttonsDIV {
     z-index: 5;
     position: absolute;
-    margin: auto;
+    margin: 0;
+    width: 100%;
 
 }
 
-.buttonGroupCards {
-    z-index: 6;
+.buttonsDIV .buttonGroupCardsDetails {
+    position: relative;
     margin: auto;
+    color: black!important;
+    background-color: white!important;
+    border: 2px solid black;
 }
 
-.optionsDropDown {
-    top: 0px;
-    right: 30px;
+.buttonsDIV .buttonGroupCardsForecast {
+    position: relative;
+    margin: auto;
+    color: black!important;
+    background-color: white!important;
+    border: 2px solid black;
+}
+
+.buttonsDIV .buttonGroupCards:hover {
+    background-color: #f0f0f0!important;
+}
+
+.buttonsDIV:hover + .card-body { 
+    opacity: 0.5;
+}
+
+.card-body:hover {
+    opacity: 0.5;
+}
+
+.dropDownSet {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }

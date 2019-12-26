@@ -217,19 +217,19 @@ function creatorTemplateCards() {
 let newElement = `
     <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
         <div class="card citycard text-center ${contador}">
-            <div class="card-body">
-                <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
-                    <div class="row">
-                        <div class="col-xs col-sm col-md col-lg">
-                            <button class="btn btn-secondary buttonGroupCards">Detalhes</button>
-                        </div>
-                        <div class="col-xs col-sm col-md col-lg">
-                            <button class="btn btn-secondary buttonGroupCards">Forecast</button>
-                        </div>
+            <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
+                <div class="row">
+                    <div class="col-xs col-sm col-md col-lg">
+                        <button class="btn btn-secondary  buttonGroupCards buttonGroupCardsDetails">Detalhes</button>
+                    </div>
+                    <div class="col-xs col-sm col-md col-lg">
+                        <button class="btn btn-secondary buttonGroupCards buttonGroupCardsForecast">Forecast</button>
                     </div>
                 </div>
+                <i class="fas fa-ellipsis-v optionsDropDown${contador} dropDownSet" style="display:none"></i>
+            </div>
+            <div class="card-body">
                 <h4 id="city${contador}" class="card-title"></h4>
-                <i class="fas fa-ellipsis-v optionsDropDown${contador}" style="display:none"></i>
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>
                 <p id="weather-description${contador}" class="card-text"></p>
