@@ -43,9 +43,17 @@ footer {
 
 .buttonsDIV {
     z-index: 5;
-    position: absolute; 
+    position: absolute;
+    margin: auto;
+
 }
 
 .buttonGroupCards {
     z-index: 6;
+    margin: auto;
+}
+
+.optionsDropDown {
+    top: 0px;
+    right: 30px;
 }

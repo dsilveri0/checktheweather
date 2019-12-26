@@ -67,11 +67,13 @@ function addEventListenerToBtns() {
 function makeButtonsAppear() {
         let number = this.classList[3];
         document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
+        document.querySelector(`.optionsDropDown${number}`).style.display = "";
 }
 
 function makeButtonsDisappear() {
     let number = this.classList[3];
     document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "none";
+    document.querySelector(`.optionsDropDown${number}`).style.display = "none";
 }
 
 function insertCitiesFromLocalStorage() {
@@ -227,6 +229,7 @@ let newElement = `
                     </div>
                 </div>
                 <h4 id="city${contador}" class="card-title"></h4>
+                <i class="fas fa-ellipsis-v optionsDropDown${contador}" style="display:none"></i>
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>
                 <p id="weather-description${contador}" class="card-text"></p>
