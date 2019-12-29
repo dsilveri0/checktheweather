@@ -56,24 +56,22 @@ function fillFieldsMainPage(data, defaults) {
 
 
 function addEventListenerToBtns() {
-    let newButtons = document.getElementsByClassName("card");
+    let newButtons = document.getElementsByClassName("downAngle");
     
     for(let i = 0; i < newButtons.length; i++){ 
-        newButtons[i].addEventListener("mouseover", makeButtonsAppear);
-        newButtons[i].addEventListener("mouseout", makeButtonsDisappear);
+        newButtons[i].addEventListener("click", makeButtonsAppear);
+        //newButtons[i].addEventListener("mouseout", makeButtonsDisappear);
     }
 }
 
 function makeButtonsAppear() {
-        let number = this.classList[3];
-        document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
-        document.querySelector(`.optionsDropDown${number}`).style.display = "";
+    let number = this.classList[4];
+    document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
 }
 
 function makeButtonsDisappear() {
-    let number = this.classList[3];
+    let number = this.classList[4];
     document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "none";
-    document.querySelector(`.optionsDropDown${number}`).style.display = "none";
 }
 
 function insertCitiesFromLocalStorage() {
@@ -217,22 +215,30 @@ function creatorTemplateCards() {
 let newElement = `
     <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
         <div class="card citycard text-center ${contador}">
-            <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
-                <div class="row">
-                    <div class="col-xs col-sm col-md col-lg">
-                        <button class="btn btn-secondary  buttonGroupCards buttonGroupCardsDetails">Detalhes</button>
-                    </div>
-                    <div class="col-xs col-sm col-md col-lg">
-                        <button class="btn btn-secondary buttonGroupCards buttonGroupCardsForecast">Forecast</button>
-                    </div>
-                </div>
-                <i class="fas fa-ellipsis-v optionsDropDown${contador} dropDownSet" style="display:none"></i>
-            </div>
             <div class="card-body">
                 <h4 id="city${contador}" class="card-title"></h4>
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>
                 <p id="weather-description${contador}" class="card-text"></p>
+                <i class="fas fa-angle-double-down fa-2x downAngle ${contador}"></i>
+            </div>
+            <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
+                <div class="row">
+                    <div class="col-xs col-sm col-md col-lg detailsDIV">
+                        <p class="buttonGroupCards detailsButtonMP">Detalhes</p>
+                    </div>
+                    <div class="col-xs col-sm col-md col-lg forecastDIV">
+                        <p class="buttonGroupCards forecastButtonMP">Forecast</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs col-sm col-md col-lg changeDIV">
+                        <p class="buttonGroupCards changeButtonMP">Alterar</p>
+                    </div>
+                    <div class="col-xs col-sm col-md col-lg deleteDIV">
+                        <p class="buttonGroupCards deleteButtonMP">Eliminar</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
