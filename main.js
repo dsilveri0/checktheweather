@@ -1,13 +1,15 @@
 let contador = 0;
+let resultsCont = 0;
 let arrayMainPageData = [];
 
 window.onload = () => {
-
+    
     getWeather("Lisboa", "PT", true, true);
     getWeather("Porto", "PT", true, true);
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
+            resultsCont = 0;
             event.preventDefault();
             document.getElementById("button-addon2").click();
         }
@@ -49,7 +51,7 @@ function fillFieldsMainPage(data, defaults) {
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
 
-        defaults ? "" : addMainPageDataToStorage(data.name, data.sys.country);
+        defaults ? "" : addMainPageDataToStorage(data.name, data.sys.country, data.id);
 
         addEventListenerToBtns();
     }
@@ -71,7 +73,6 @@ function makeButtonsAppear() {
     document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
     document.querySelector(`.upAngle${number}`).style.display = "";
     document.querySelector(`.downAngle${number}`).style.display = "none";
-    // upAngle
 }
 
 function makeButtonsDisappear() {
@@ -124,6 +125,7 @@ function spawnSearchResults() {
 
 
 function displaySearchResults(data) {
+    resultsCont = 0;
     spawnSearchResults()
 
     let contentVerifier = document.querySelector(".searchList").innerHTML;
@@ -150,8 +152,17 @@ function callFillAndAddListener(data) {
     homeSelector = document.getElementsByClassName("homeBtn");
 
     for(let i = 0; i < homeSelector.length; i++) {
-        homeSelector[i] == null || homeSelector[i] == undefined ? homeSelector[i] = "" : homeSelector[i].addEventListener("click", () => {
-            insertCityOnMainPage(i);
+        homeSelector[i].addEventListener("click", () => {
+            let values = document.getElementById(`searchResultsID${i}`).value;
+
+            let city = values.split(", ").slice(0,1);
+            let country = values.split(", ").slice(1,2);
+
+            // To the ID aswell I must do this:
+            // let id = data.split(", ").slice(2,3)
+
+            getWeather(city, country, true, false);
+
         });
     }
 }
@@ -174,44 +185,28 @@ function fillFieldsSearchResults(data) {
                     </div>
                     <div class="col-xs-7 col-sm-6 col-md-7 col-lg-8">
                         <div class="groupData style="margin:auto;"">
-                            <p id="cityCountry5">${data.list[i].name}, ${data.list[i].sys.country} (Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon})</p>
-                            <p id="temp5">Temperatura: ${data.list[i].main.temp.toFixed(0)} ºC</p>
-                            <p id="description5">Previsão: ${data.list[i].weather[0].description}</p>
+                            <p id="cityCountry${resultsCont}">${data.list[i].name}, ${data.list[i].sys.country} (Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon})</p>
+                            <p id="temper${resultsCont}">Temperatura: ${data.list[i].main.temp.toFixed(0)} ºC</p>
+                            <p id="description${resultsCont}">Previsão: ${data.list[i].weather[0].description}</p>
                         </div>
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
-                        <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn"></i>
-                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn"></i>
+                        <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn ${resultsCont}"></i>
+                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn ${resultsCont}"></i>
 
-                        <input type="hidden" id="searchResultsID" value="${data.list[i].name}, ${data.list[i].sys.country}, ${data.list[i].id}">
+                        <input type="hidden" id="searchResultsID${resultsCont}" value="${data.list[i].name}, ${data.list[i].sys.country}, ${data.list[i].id}">
                     </div>
                 </div>
             </div>
         `;
+        resultsCont = resultsCont + 1;
         document.querySelector(".searchList").insertAdjacentHTML('beforeend', searchResult);
     }
 }
 
-function insertCityOnMainPage(index) {
-    
-    elem = document.getElementsByClassName("homeBtn");
+function addMainPageDataToStorage(cityName, countryName, cityID) {
 
-    length = elem[index].parentNode.childNodes.length;
-    data = elem[index].parentNode.childNodes[length-2].value;
-
-    let city = data.split(", ").slice(0,1)
-    let country = data.split(", ").slice(1,2)
-    
-    // To the ID aswell I must do this:
-    // let id = data.split(", ").slice(2,3)
-
-    getWeather(city, country, true, false);
-
-}
-
-function addMainPageDataToStorage(cityName, countryName) {
-
-    let jsObj = {city: cityName, country: countryName};
+    let jsObj = {city: cityName, country: countryName, ID: cityID};
     arrayMainPageData.push(jsObj);
 
     localStorage.setItem("mainPageCities", JSON.stringify(arrayMainPageData));
@@ -258,7 +253,7 @@ let newElement = `
             </div>
         </div>
     </div>
-    `
+    `;
     contador = contador + 1;
     document.querySelector(".testingDiv").insertAdjacentHTML("beforeend", newElement);
 }
