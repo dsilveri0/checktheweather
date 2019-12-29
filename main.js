@@ -27,6 +27,7 @@ function getWeather(city, country, verifier, defaults) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
+                console.log(json);
                 verifier ? fillFieldsMainPage(json, defaults) : "";
 
             } else {
@@ -181,6 +182,8 @@ function fillFieldsSearchResults(data) {
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
                         <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn"></i>
                         <i class="fas fa-star fa-2x center groupData buttonsResults favBtn"></i>
+
+                        <input type="hidden" id="searchResultsID" value="${data.list[i].name}, ${data.list[i].sys.country}, ${data.list[i].id}">
                     </div>
                 </div>
             </div>
@@ -192,10 +195,15 @@ function fillFieldsSearchResults(data) {
 function insertCityOnMainPage(index) {
     
     elem = document.getElementsByClassName("homeBtn");
-    data = elem[index].parentNode.parentNode.previousSibling.nextElementSibling.innerText;
 
-    let city = data.split(',').slice(0,1)
-    let country = data.split(' ').slice(1,2)
+    length = elem[index].parentNode.childNodes.length;
+    data = elem[index].parentNode.childNodes[length-2].value;
+
+    let city = data.split(", ").slice(0,1)
+    let country = data.split(", ").slice(1,2)
+    
+    // To the ID aswell I must do this:
+    // let id = data.split(", ").slice(2,3)
 
     getWeather(city, country, true, false);
 
@@ -228,22 +236,23 @@ let newElement = `
                 <p id="weather-description${contador}" class="card-text"></p>
                 <i class="fas fa-angle-double-down fa-2x downAngle ${contador} downAngle${contador}"></i>
                 <i class="fas fa-angle-double-up fa-2x upAngle ${contador} upAngle${contador}" style="display: none"></i>
-            </div>
-            <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
-                <div class="row">
-                    <div class="col-xs col-sm col-md col-lg detailsDIV">
-                        <p class="buttonGroupCards detailsButtonMP">Detalhes</p>
+                
+                <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none;">
+                    <div class="row">
+                        <div class="col-xs col-sm col-md col-lg detailsDIV">
+                            <a class="buttonGroupCards detailsButtonMP">Detalhes</a>
+                        </div>
+                        <div class="col-xs col-sm col-md col-lg forecastDIV">
+                            <a class="buttonGroupCards forecastButtonMP">Forecast</a>
+                        </div>
                     </div>
-                    <div class="col-xs col-sm col-md col-lg forecastDIV">
-                        <p class="buttonGroupCards forecastButtonMP">Forecast</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs col-sm col-md col-lg changeDIV">
-                        <p class="buttonGroupCards changeButtonMP">Alterar</p>
-                    </div>
-                    <div class="col-xs col-sm col-md col-lg deleteDIV">
-                        <p class="buttonGroupCards deleteButtonMP">Eliminar</p>
+                    <div class="row">
+                        <div class="col-xs col-sm col-md col-lg changeDIV">
+                            <a class="buttonGroupCards changeButtonMP">Alterar</a>
+                        </div>
+                        <div class="col-xs col-sm col-md col-lg deleteDIV">
+                            <a class="buttonGroupCards deleteButtonMP">Eliminar</a>
+                        </div>
                     </div>
                 </div>
             </div>
