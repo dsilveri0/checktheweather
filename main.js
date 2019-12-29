@@ -56,22 +56,28 @@ function fillFieldsMainPage(data, defaults) {
 
 
 function addEventListenerToBtns() {
-    let newButtons = document.getElementsByClassName("downAngle");
+    let downButtons = document.getElementsByClassName("downAngle");
+    let upButtons = document.getElementsByClassName("upAngle");
     
-    for(let i = 0; i < newButtons.length; i++){ 
-        newButtons[i].addEventListener("click", makeButtonsAppear);
-        //newButtons[i].addEventListener("mouseout", makeButtonsDisappear);
+    for(let i = 0; i < downButtons.length; i++){ 
+        downButtons[i].addEventListener("click", makeButtonsAppear);
+        upButtons[i].addEventListener("click", makeButtonsDisappear);
     }
 }
 
 function makeButtonsAppear() {
     let number = this.classList[4];
     document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "";
+    document.querySelector(`.upAngle${number}`).style.display = "";
+    document.querySelector(`.downAngle${number}`).style.display = "none";
+    // upAngle
 }
 
 function makeButtonsDisappear() {
     let number = this.classList[4];
     document.querySelector(`.buttonGroupCardsDIV${number}`).style.display = "none";
+    document.querySelector(`.upAngle${number}`).style.display = "none";
+    document.querySelector(`.downAngle${number}`).style.display = "";
 }
 
 function insertCitiesFromLocalStorage() {
@@ -220,7 +226,8 @@ let newElement = `
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>
                 <p id="weather-description${contador}" class="card-text"></p>
-                <i class="fas fa-angle-double-down fa-2x downAngle ${contador}"></i>
+                <i class="fas fa-angle-double-down fa-2x downAngle ${contador} downAngle${contador}"></i>
+                <i class="fas fa-angle-double-up fa-2x upAngle ${contador} upAngle${contador}" style="display: none"></i>
             </div>
             <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none">
                 <div class="row">
