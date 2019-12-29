@@ -4,8 +4,8 @@ let arrayMainPageData = [];
 
 window.onload = () => {
     
-    getWeather("Lisboa", "PT", true, true);
-    getWeather("Porto", "PT", true, true);
+    getWeather("Lisboa", "PT", true);
+    getWeather("Porto", "PT", true);
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -19,7 +19,7 @@ window.onload = () => {
     insertCitiesFromLocalStorage();
 }
 
-function getWeather(city, country, verifier, defaults) {
+function getWeather(city, country, verifier) {
     const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
@@ -29,8 +29,8 @@ function getWeather(city, country, verifier, defaults) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                console.log(json);
-                verifier ? fillFieldsMainPage(json, defaults) : "";
+                //console.log(json.coord.lat + ", " + json.coord.lon + " ---> " + json.id);
+                verifier ? fillFieldsMainPage(json) : "";
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -40,7 +40,28 @@ function getWeather(city, country, verifier, defaults) {
     req.send();
 }
 
-function fillFieldsMainPage(data, defaults) {
+function getWeatherByID(ID) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${ID}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    let req = new XMLHttpRequest();
+
+    req.open('GET', API_URL);
+    req.onload = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let json = JSON.parse(req.responseText);
+
+                //console.log(json.coord.lat + ", " + json.coord.lon + " ---> " + json.id);
+                fillFieldsMainPage(json);
+
+            } else {
+                console.log('error msg: ' + req.status);
+            }
+        }
+    }
+    req.send();
+}
+
+function fillFieldsMainPage(data) {
     if (contador < 6) {
         let icon = data.weather[0].icon;
 
@@ -51,7 +72,7 @@ function fillFieldsMainPage(data, defaults) {
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
 
-        defaults ? "" : addMainPageDataToStorage(data.name, data.sys.country, data.id);
+        addMainPageDataToStorage(data.name, data.sys.country, data.id);
 
         addEventListenerToBtns();
     }
@@ -86,8 +107,10 @@ function insertCitiesFromLocalStorage() {
     let retrievedData = localStorage.getItem("mainPageCities");
     let citiesStorage = JSON.parse(retrievedData);
 
-    for(let i = 0; i < citiesStorage.length; i++) {
-        getWeather(citiesStorage[i].city, citiesStorage[i].country, true, false);
+    if (citiesStorage != null) {
+        for(let i = 0; i < citiesStorage.length; i++) {
+            getWeatherByID(citiesStorage[i].id);
+        }
     }
 }
 
@@ -149,20 +172,24 @@ function callFillAndAddListener(data) {
     clearSearchResults('groupData');
     fillFieldsSearchResults(data);
 
-    homeSelector = document.getElementsByClassName("homeBtn");
+    let resultsLength = document.getElementsByClassName("homeBtn");
 
-    for(let i = 0; i < homeSelector.length; i++) {
-        homeSelector[i].addEventListener("click", () => {
+    for(let i = 0; i < resultsLength.length; i++) {
+        let eventButtonsSel = document.querySelector(`.homeBtn${i}`);
+        eventButtonsSel.addEventListener("click", () => {
             let values = document.getElementById(`searchResultsID${i}`).value;
 
             let city = values.split(", ").slice(0,1);
             let country = values.split(", ").slice(1,2);
+            
+            let id = values.split(", ").slice(2,3)
 
+            console.log(`${city} ${country} ${id}`);
+            
             // To the ID aswell I must do this:
             // let id = data.split(", ").slice(2,3)
 
-            getWeather(city, country, true, false);
-
+            getWeatherByID(id);
         });
     }
 }
@@ -191,8 +218,8 @@ function fillFieldsSearchResults(data) {
                         </div>
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
-                        <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn ${resultsCont}"></i>
-                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn ${resultsCont}"></i>
+                        <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn homeBtn${resultsCont}"></i>
+                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn favBtn${resultsCont}"></i>
 
                         <input type="hidden" id="searchResultsID${resultsCont}" value="${data.list[i].name}, ${data.list[i].sys.country}, ${data.list[i].id}">
                     </div>
