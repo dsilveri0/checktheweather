@@ -75,8 +75,18 @@ footer {
 }
 
 .detailsDIV:hover, .forecastDIV:hover,
-.changeDIV:hover, .deleteDIV:hover {
+.changeDIV:hover {
     border-radius: 5px;
     color: white;
     background-color: #5a5a5a;
+}
+
+.deleteButtonMP:hover {
+    border-radius: 5px;
+    background-color: #ff5151;
+    color: white!important;
+}
+
+.iconNAV {
+    color: #5555ff!important;
 }
