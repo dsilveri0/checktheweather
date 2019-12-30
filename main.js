@@ -316,18 +316,18 @@ let newElement = `
                 <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none;">
                     <div class="row">
                         <div class="col-xs col-sm col-md col-lg detailsDIV">
-                            <a class="buttonGroupCards detailsButtonMP">Detalhes</a>
+                            <a class="buttonGroupCards detailsButtonMP ${contador} detailsButtonMP${contador}">Detalhes</a>
                         </div>
                         <div class="col-xs col-sm col-md col-lg forecastDIV">
-                            <a class="buttonGroupCards forecastButtonMP">Forecast</a>
+                            <a class="buttonGroupCards forecastButtonMP ${contador} forecastButtonMP${contador}">Forecast</a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs col-sm col-md col-lg changeDIV">
-                            <a class="buttonGroupCards changeButtonMP">Alterar</a>
+                            <a class="buttonGroupCards changeButtonMP ${contador} changeButtonMP${contador}">Alterar</a>
                         </div>
                         <div class="col-xs col-sm col-md col-lg deleteDIV">
-                            <a class="buttonGroupCards deleteButtonMP">Eliminar</a>
+                            <a class="buttonGroupCards deleteButtonMP ${contador} deleteButtonMP${contador}">Eliminar</a>
                         </div>
                     </div>
                 </div>
