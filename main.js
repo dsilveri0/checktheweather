@@ -21,6 +21,10 @@ window.onload = () => {
     });
     document.querySelector(".search-bar-city").value = "";
 
+    $('.modal').on('hidden.bs.modal', () => {
+        verifierForCities = 0;
+    })
+
     insertCitiesFromLocalStorage();
 }
 
@@ -205,11 +209,12 @@ function displaySearchResults(data) {
             callFillAndAddListener(data);
         
         } else if(contentVerifier != ""){
-            
             callFillAndAddListener(data);
-            document.querySelector(".searchList").insertAdjacentHTML("afterbegin", `
-                <p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
-            `)
+                if(verifierForCities != 0) {
+                    document.querySelector(".searchList").insertAdjacentHTML("afterbegin", `
+                        <p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
+                    `)
+                }
         }
     } else if (data.count === 0) {
         if (verifierForCities === 0) {
