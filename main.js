@@ -2,6 +2,7 @@ let contador = 0;
 let resultsCont = 0;
 let arrayMainPageData = [];
 let arrayDefaultMpData = [];
+let verifierForCities = 0;
 
 window.onload = () => {
     
@@ -151,24 +152,25 @@ function findCity(city) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                console.log(arrayMainPageData);
-                console.log(arrayDefaultMpData);
-
                 for(let i = 0; i < json.count; i++) {
                     if(json.list[i].id == arrayDefaultMpData[0].porto || json.list[i].id == arrayDefaultMpData[0].lisboa) {
                         json.list.splice(i, 1);
                         json.count--;
+                        verifierForCities = 1;
+                    }
+
+                    for(let k = 0; k < arrayMainPageData.length; k++) {
+                        // Need to verify for undefined or null (json.list[i] can sometimes be null/undefined)
+                        if(json.count != 0 && typeof json.list != "undefined") {
+                            if(json.list[i].id === arrayMainPageData[k].Id) {
+                                json.list.splice(i, 1);
+                                json.count--;
+                                verifierForCities = 1;
+                            }
+                        }
                     }
                 }
 
-                for(let i = 0; i < json.count; i++) {
-                    if(json.list[i].id == arrayDefaultMpData[0].porto || json.list[i].id == arrayDefaultMpData[0].lisboa) {
-                        json.list.splice(i, 1);
-                        json.count--;
-                    }
-                }
-
-                console.log(json.list);
                 displaySearchResults(json);
 
             } else {
@@ -206,10 +208,16 @@ function displaySearchResults(data) {
         } else if(contentVerifier != ""){
             
             callFillAndAddListener(data);
-
+            document.querySelector(".searchList").insertAdjacentHTML("afterbegin", `
+                <p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
+            `)
         }
     } else if (data.count == 0) {
-        document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData">Cidade não encontrada!</p>`;
+        if (verifierForCities == 0) {
+            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData" style="color: red; text-align: center; margin: 25px;">Cidade não encontrada!</p>`;
+        } else {
+            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Cidade já adicionada à página principal!</p>`;
+        }
     }
 }
 
