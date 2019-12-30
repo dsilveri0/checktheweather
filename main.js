@@ -1,11 +1,15 @@
 let contador = 0;
 let resultsCont = 0;
 let arrayMainPageData = [];
+let arrayDefaultMpData = [];
 
 window.onload = () => {
     
-    getWeather("Lisboa", "PT", true);
-    getWeather("Porto", "PT", true);
+    let lisboa = 2267057;
+    let porto = 2735943;
+
+    getWeather(lisboa, true);
+    getWeather(porto, true);
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -19,8 +23,15 @@ window.onload = () => {
     insertCitiesFromLocalStorage();
 }
 
-function getWeather(city, country, verifier) {
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+(function(cityID1, cityID2){
+    let defaultsMainPage = {lisboa: cityID1, porto: cityID2};
+
+    arrayDefaultMpData.push(defaultsMainPage);
+    localStorage.setItem("defaultMainPageCities", JSON.stringify(arrayDefaultMpData));
+})(2267057, 2735943);
+
+function getWeather(id, verifier) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
     req.open('GET', API_URL);
@@ -29,8 +40,7 @@ function getWeather(city, country, verifier) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                //console.log(json.coord.lat + ", " + json.coord.lon + " ---> " + json.id);
-                verifier ? fillFieldsMainPage(json) : "";
+                verifier ? defaultItemsMainPage(json) : "";
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -59,6 +69,24 @@ function getWeatherByID(id) {
     }
     req.send();
 }
+
+
+function defaultItemsMainPage(data) {
+    if (contador < 6) {
+        let icon = data.weather[0].icon;
+
+        creatorTemplateCards();
+        
+        document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
+        document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
+        document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
+        document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
+
+        addEventListenerToBtns();
+    }
+}
+
+
 
 function fillFieldsMainPage(data) {
     if (contador < 6) {
@@ -178,15 +206,12 @@ function callFillAndAddListener(data) {
         eventButtonsSel.addEventListener("click", () => {
             let values = document.getElementById(`searchResultsID${i}`).value;
 
-            let city = values.split(", ").slice(0,1);
-            let country = values.split(", ").slice(1,2);
-            
+            /* let city = values.split(", ").slice(0,1);
+            let country = values.split(", ").slice(1,2); */
+
             let id = values.split(", ").slice(2,3)
 
-            console.log(`${city} ${country} ${id}`);
-            
-            // To the ID aswell I must do this:
-            // let id = data.split(", ").slice(2,3)
+            /* console.log(`${city} ${country} ${id}`); */
 
             getWeatherByID(id);
         });
@@ -233,12 +258,19 @@ function fillFieldsSearchResults(data) {
 function addMainPageDataToStorage(cityName, countryName, cityID) {
 
     let jsObj = {city: cityName, country: countryName, Id: cityID};
-    let retrievedData = localStorage.getItem("mainPageCities");
-    let citiesStorage = JSON.parse(retrievedData);
+    //let retrievedData = localStorage.getItem("mainPageCities");
+    //let citiesStorage = JSON.parse(retrievedData);
     
-    // TENHO DE VERIFICAR SE A CIDADE COM UM DETERMINADO ID JÁ AQUI ESTÁ, SE NÃO TIVER CRIO-O, SENÃO NÃO O CRIO.
+    //TENHO DE VERIFICAR SE A CIDADE COM UM DETERMINADO ID JÁ AQUI ESTÁ, SE NÃO TIVER CRIO-O, SENÃO NÃO O CRIO.
 
+    
     arrayMainPageData.push(jsObj);
+
+   /*  for(let i = 0; i<citiesStorage.length; i++) {
+        console.log(citiesStorage[i].city);
+        console.log(citiesStorage[i].Id);
+        console.log(arrayMainPageData[i].city);
+    } */
 
     localStorage.setItem("mainPageCities", JSON.stringify(arrayMainPageData));
 
