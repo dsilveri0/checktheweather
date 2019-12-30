@@ -211,7 +211,7 @@ function displaySearchResults(data) {
                 <p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
             `)
         }
-    } else if (data.count == 0) {
+    } else if (data.count === 0) {
         if (verifierForCities === 0) {
             document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData" style="color: red; text-align: center; margin: 25px;">Cidade não encontrada!</p>`;
         } else {
