@@ -151,6 +151,24 @@ function findCity(city) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
+                console.log(arrayMainPageData);
+                console.log(arrayDefaultMpData);
+
+                for(let i = 0; i < json.count; i++) {
+                    if(json.list[i].id == arrayDefaultMpData[0].porto || json.list[i].id == arrayDefaultMpData[0].lisboa) {
+                        json.list.splice(i, 1);
+                        json.count--;
+                    }
+                }
+
+                for(let i = 0; i < json.count; i++) {
+                    if(json.list[i].id == arrayDefaultMpData[0].porto || json.list[i].id == arrayDefaultMpData[0].lisboa) {
+                        json.list.splice(i, 1);
+                        json.count--;
+                    }
+                }
+
+                console.log(json.list);
                 displaySearchResults(json);
 
             } else {
@@ -203,17 +221,17 @@ function callFillAndAddListener(data) {
 
     for(let i = 0; i < resultsLength.length; i++) {
         let eventButtonsSel = document.querySelector(`.homeBtn${i}`);
+        
         eventButtonsSel.addEventListener("click", () => {
             let values = document.getElementById(`searchResultsID${i}`).value;
-
-            /* let city = values.split(", ").slice(0,1);
-            let country = values.split(", ").slice(1,2); */
-
             let id = values.split(", ").slice(2,3)
 
+            getWeatherByID(id);
+            
+            /* let city = values.split(", ").slice(0,1);
+            let country = values.split(", ").slice(1,2); */
             /* console.log(`${city} ${country} ${id}`); */
 
-            getWeatherByID(id);
         });
     }
 }
@@ -258,20 +276,8 @@ function fillFieldsSearchResults(data) {
 function addMainPageDataToStorage(cityName, countryName, cityID) {
 
     let jsObj = {city: cityName, country: countryName, Id: cityID};
-    //let retrievedData = localStorage.getItem("mainPageCities");
-    //let citiesStorage = JSON.parse(retrievedData);
-    
-    //TENHO DE VERIFICAR SE A CIDADE COM UM DETERMINADO ID JÁ AQUI ESTÁ, SE NÃO TIVER CRIO-O, SENÃO NÃO O CRIO.
 
-    
     arrayMainPageData.push(jsObj);
-
-   /*  for(let i = 0; i<citiesStorage.length; i++) {
-        console.log(citiesStorage[i].city);
-        console.log(citiesStorage[i].Id);
-        console.log(arrayMainPageData[i].city);
-    } */
-
     localStorage.setItem("mainPageCities", JSON.stringify(arrayMainPageData));
 
 }
