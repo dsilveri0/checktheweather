@@ -40,8 +40,8 @@ function getWeather(city, country, verifier) {
     req.send();
 }
 
-function getWeatherByID(ID) {
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${ID}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+function getWeatherByID(id) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
     req.open('GET', API_URL);
@@ -50,7 +50,6 @@ function getWeatherByID(ID) {
             if (req.status === 200) {
                 let json = JSON.parse(req.responseText);
 
-                //console.log(json.coord.lat + ", " + json.coord.lon + " ---> " + json.id);
                 fillFieldsMainPage(json);
 
             } else {
@@ -71,7 +70,7 @@ function fillFieldsMainPage(data) {
         document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
-
+        
         addMainPageDataToStorage(data.name, data.sys.country, data.id);
 
         addEventListenerToBtns();
@@ -109,7 +108,7 @@ function insertCitiesFromLocalStorage() {
 
     if (citiesStorage != null) {
         for(let i = 0; i < citiesStorage.length; i++) {
-            getWeatherByID(citiesStorage[i].id);
+            getWeatherByID(citiesStorage[i].Id);
         }
     }
 }
@@ -233,14 +232,19 @@ function fillFieldsSearchResults(data) {
 
 function addMainPageDataToStorage(cityName, countryName, cityID) {
 
-    let jsObj = {city: cityName, country: countryName, ID: cityID};
+    let jsObj = {city: cityName, country: countryName, Id: cityID};
+    let retrievedData = localStorage.getItem("mainPageCities");
+    let citiesStorage = JSON.parse(retrievedData);
+    
+    // TENHO DE VERIFICAR SE A CIDADE COM UM DETERMINADO ID JÁ AQUI ESTÁ, SE NÃO TIVER CRIO-O, SENÃO NÃO O CRIO.
+
     arrayMainPageData.push(jsObj);
 
     localStorage.setItem("mainPageCities", JSON.stringify(arrayMainPageData));
 
 }
 
-function removeMainPageDataFromStorage() {
+function removeMainPageDataFromStorage(cityID) {
 // Removes data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
 // May be called when deleting cites from the local storage.
 
