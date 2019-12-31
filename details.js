@@ -1,9 +1,29 @@
 let verifierForCities = 0;
 let resultsCont = 0;
 
+function ipLookUp () {
+    $.ajax({
+        url: 'https://ipinfo.io',
+        dataType: 'jsonp',       
+        jsonp: 'callback',
+    })
+    .then(
+        function success(response) {
+            console.log(response);
+        },
+
+        function fail(data, status) {
+            console.log('Request failed.  Returned status of', 
+            status);
+        }
+    );
+}
+ipLookUp()
+
 window.onload = () => {
 
     getWeatherByID(2267095);
+    //getWeatherByCoord();
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -18,6 +38,27 @@ window.onload = () => {
         verifierForCities = 0;
     })
 }
+
+function getWeatherByCoord(coord) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?${coord}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    let req = new XMLHttpRequest();
+
+    req.open('GET', API_URL);
+    req.onload = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let json = JSON.parse(req.responseText);
+
+                fillFieldDetails(json);
+
+            } else {
+                console.log('error msg: ' + req.status);
+            }
+        }
+    }
+    req.send();
+}
+
 
 function getWeatherByID(id) {
     const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
