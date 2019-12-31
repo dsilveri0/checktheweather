@@ -212,15 +212,15 @@ function displaySearchResults(data) {
             callFillAndAddListener(data);
                 if(verifierForCities != 0) {
                     document.querySelector(".searchList").insertAdjacentHTML("afterbegin", `
-                        <p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
+                        <p id="notFound" class="groupData alert alert-info" style="text-align: center; margin: 25px;">Alguns resultados foram omitidos.</p>
                     `)
                 }
         }
     } else if (data.count === 0) {
         if (verifierForCities === 0) {
-            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData" style="color: red; text-align: center; margin: 25px;">Cidade não encontrada!</p>`;
+            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData alert alert-danger" style="text-align: center; margin: 25px;">Cidade não encontrada!</p>`;
         } else {
-            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData" style="color: green; text-align: center; margin: 25px;">Cidade já adicionada à página principal!</p>`;
+            document.querySelector(".searchList").innerHTML = `<p id="notFound" class="groupData alert alert-success" style="text-align: center; margin: 25px;">Cidade já adicionada à página principal!</p>`;
         }
     }
 }
