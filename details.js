@@ -1,25 +1,6 @@
 let verifierForCities = 0;
 let resultsCont = 0;
 
-function ipLookUp () {
-    $.ajax({
-        url: 'https://ipinfo.io',
-        dataType: 'jsonp',       
-        jsonp: 'callback',
-    })
-    .then(
-        function success(response) {
-            console.log(response);
-        },
-
-        function fail(data, status) {
-            console.log('Request failed.  Returned status of', 
-            status);
-        }
-    );
-}
-ipLookUp()
-
 window.onload = () => {
 
     getWeatherByID(2267095);
