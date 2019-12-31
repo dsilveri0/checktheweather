@@ -266,7 +266,7 @@ function fillFieldsSearchResults(data) {
                     </div>
                     <div class="col-xs-7 col-sm-6 col-md-7 col-lg-8">
                         <div class="groupData style="margin:auto;"">
-                            <p id="cityCountry${resultsCont}">${data.list[i].name}, ${data.list[i].sys.country} (Lat: ${data.list[i].coord.lat}, Lon: ${data.list[i].coord.lon})</p>
+                            <p id="cityCountry${resultsCont}">${data.list[i].name}, ${data.list[i].sys.country}</p>
                             <p id="temper${resultsCont}">Temperatura: ${data.list[i].main.temp.toFixed(0)} ºC</p>
                             <p id="description${resultsCont}">Previsão: ${data.list[i].weather[0].description}</p>
                         </div>

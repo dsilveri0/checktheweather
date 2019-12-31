@@ -131,3 +131,11 @@ footer {
 #rotatedArrow {
     margin: 10px;
 }
+
+.searchBtn {
+    color: #5a5a5a;
+}
+
+.searchBtn:hover {
+    color: #1a1a1a;
+}
