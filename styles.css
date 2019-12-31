@@ -127,3 +127,7 @@ footer {
 .tdSecondCol {
     width: 25%;
 }
+
+#rotatedArrow {
+    margin: 10px;
+}

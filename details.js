@@ -67,8 +67,6 @@ function addZero(i) {
 }
 
 function fillFieldDetails(data) {
-    console.log(data);
-    
     let icon = data.weather[0].icon;
     let time = getTime(data.dt);
 
@@ -114,9 +112,12 @@ function fillFieldDetails(data) {
                             <td class="tdThirdCol">
                                 <div class="thirdCol">
                                     <p>Visibilidade: ${data.visibility}m</p>
+                                    <p>Nuvens: ${data.clouds.all} %</p>           
                                     <p>Velocidade do vento: ${data.wind.speed} m/s</p>
-                                    <p>Pressão: ${data.main.pressure} hPa</p>
-                                    <p>Humidade: ${data.main.humidity} %</p>                    
+                                    <div class="windDIV">
+                                        Direção do Vento: ${direction(data.wind.deg)}
+                                        <i id="rotatedArrow" class="fas fa-long-arrow-alt-up fa-1x"></i>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -134,6 +135,38 @@ function fillFieldDetails(data) {
         </div>
     `;
     document.querySelector(".testingDiv").innerHTML = detailsCard;
+    
+    rotate(data.wind.deg);
+}
+
+function direction(degress) {
+    if (degress === 0) {
+        return "S";
+    }else if (degress > 0 && degress < 90) {
+        return "SW";
+    }
+    else if (degress === 90) {
+        return "W";
+    }
+    else if (degress > 90 && degress < 180) {
+        return "NW";
+    }
+    else if (degress === 180) {
+        return "N";
+    }
+    else if (degress > 180 && degress < 270) {
+        return "NE";
+    }
+    else if (degress === 270) {
+        return "E";
+    }
+    else if (degress > 270 && degress < 360) {
+        return "SE";
+    }
+}
+
+function rotate(degrees) {
+    document.getElementById("rotatedArrow").setAttribute("style", `-webkit-transform:rotate(${degrees}deg)`);
 }
 
 function findCity(city) {
