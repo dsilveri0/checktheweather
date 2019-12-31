@@ -90,3 +90,40 @@ footer {
 .iconNAV {
     color: #8383ff!important;
 }
+
+.iconWeather {
+    height: 80px;
+    width: 80px;
+}
+
+.maxTemp {
+    background-color: #ff8558;
+    border-radius: 20px;
+    margin: auto auto 5px auto;
+    height: 30px;
+    width: 70px;
+}
+.minTemp {
+    background-color: #5e5eff;
+    border-radius: 20px;
+    margin: 5px auto auto auto;
+    height: 30px;
+    width: 70px;
+}
+
+.maxTemp .max, .minTemp .min {
+    color: white;
+    margin: auto;
+    display: inline-block;
+}
+.tdFirstCol {
+    width: 25%;
+}
+
+.firstCol {
+    margin: 5px auto;
+}
+
+.tdSecondCol {
+    width: 25%;
+}

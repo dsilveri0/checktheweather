@@ -3,6 +3,8 @@ let resultsCont = 0;
 
 window.onload = () => {
 
+    getWeatherByID(2267095);
+
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
             resultsCont = 0;
@@ -37,15 +39,97 @@ function getWeatherByID(id) {
     req.send();
 }
 
+function getTime(unix_time) {
+
+    let time = new Date(unix_time*1000);
+
+    let hour = addZero(time.getHours());
+    let minute = addZero(time.getMinutes());
+    let weekarray = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ]
+    let weekday = weekarray[time.getUTCDay()];
+
+    return `${weekday}, ${hour}:${minute}`;
+}
+
+function addZero(i) {
+    if (i < 10) {
+      i = `0${i}`;
+    }
+    return i;
+}
+
 function fillFieldDetails(data) {
     console.log(data);
     
+    let icon = data.weather[0].icon;
+    let time = getTime(data.dt);
+
     let detailsCard = `
-        <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
-            <div class="citycard text-center">
-                <div>
-                    <p>Hello :D</p>
-                </div>
+        <div class="col-xs col-sm col-md" style="margin-bottom: 20px;">           
+            <div class="citycard">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col" colspan="2">Detalhes:</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-center" scope="row">
+                                <img class="iconWeather" src="https://openweathermap.org/img/wn/${icon}@2x.png">
+                                <div class="maxTemp">
+                                    <p class="max" center>${data.main.temp_max}º</p>
+                                </div>
+                                <div class="minTemp">
+                                    <p class="min center">${data.main.temp_min}º</p>
+                                </div>
+                            </th>
+                            <td class="tdFirstCol">
+                                <div class="firstCol">
+                                    <h2 style="margin:0">${data.name}, ${data.sys.country}</h2>
+                                    <p><small>(Latitude: ${data.coord.lon}, Longitude: ${data.coord.lat})</small></p>
+                                    <p>${time} UTC-${data.timezone}</p>
+                                    <p>${data.weather[0].main}, ${data.weather[0].description}</p>
+                                </div>
+                            </td>
+                            <td class="tdSecondCol">
+                                <div class="secondCol">
+                                    <p>Temperatura: ${data.main.temp} ºC</p>
+                                    <p>Temperatura sentida: ${data.main.feels_like} ºC</p>
+                                    <p>Pressão: ${data.main.pressure} hPa</p>
+                                    <p>Humidade: ${data.main.humidity} %</p>                    
+                                </div>
+                            </td>
+                            <td class="tdThirdCol">
+                                <div class="thirdCol">
+                                    <p>Visibilidade: ${data.visibility}m</p>
+                                    <p>Velocidade do vento: ${data.wind.speed} m/s</p>
+                                    <p>Pressão: ${data.main.pressure} hPa</p>
+                                    <p>Humidade: ${data.main.humidity} %</p>                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     `;
