@@ -119,7 +119,7 @@ function fillFieldDetails(data) {
                                 <div class="firstCol">
                                     <h2 style="margin:0">${data.name}, ${data.sys.country}</h2>
                                     <p><small>(Latitude: ${data.coord.lon}, Longitude: ${data.coord.lat})</small></p>
-                                    <p>${time} UTC-${data.timezone}</p>
+                                    <p>${time} UTC ${data.timezone}</p>
                                     <p>${data.weather[0].main}, ${data.weather[0].description}</p>
                                 </div>
                             </td>
