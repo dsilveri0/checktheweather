@@ -3,7 +3,12 @@ let resultsCont = 0;
 
 window.onload = () => {
 
-    getWeatherByID(2267095);
+// criar função que me permita verificar se o session storage está vazio ou não. caso esteja, executar "funçao coord"
+// senão executar funcao by id, com o id no session storage.
+
+    loadDetails();
+
+    //getWeatherByID(2267095);
     //getWeatherByCoord();
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
@@ -20,7 +25,17 @@ window.onload = () => {
     })
 }
 
-function getWeatherByCoord(coord) {
+function loadDetails() {
+    let newID = sessionStorage.getItem("cityID");
+    if(typeof newID != "undefined" || newID != null) {
+        getWeatherByID(newID);
+        sessionStorage.clear();
+    } else {
+        // função com as coordenadas
+    }
+}
+
+/* function getWeatherByCoord(coord) {
     const API_URL = `https://api.openweathermap.org/data/2.5/weather?${coord}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
@@ -38,7 +53,7 @@ function getWeatherByCoord(coord) {
         }
     }
     req.send();
-}
+} */
 
 
 function getWeatherByID(id) {

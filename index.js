@@ -82,7 +82,7 @@ function defaultItemsMainPage(data) {
 
         creatorTemplateCards();
 
-        sendDataToDetails(data);
+        document.querySelector(`.detailsButtonMP${contador-1}`).addEventListener("click", sendDataToDetails(data));
 
         document.querySelector(`.deleteDIV${contador-1}`).style.display = "none";
         document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
@@ -103,7 +103,7 @@ function fillFieldsMainPage(data) {
 
         creatorTemplateCards();
 
-        sendDataToDetails(data);
+        document.querySelector(`.detailsButtonMP${contador-1}`).addEventListener("click", sendDataToDetails(data));
         
         document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
         document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
@@ -139,11 +139,12 @@ function fillFieldsMainPage(data) {
 }
 
 function sendDataToDetails(data) {
-    document.querySelector(`detailsButtonMP${contador}`)
+    return function() {
+        console.log(data.id);
 
-
-
-
+        sessionStorage.setItem("cityID", data.id);
+        window.location = ("details.html");
+    }
 }
 
 function addEventListenerToBtns() {
