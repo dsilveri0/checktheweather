@@ -29,7 +29,7 @@ window.onload = () => {
 }
 
 (function(cityID1, cityID2){
-    let defaultsMainPage = {lisboa: cityID1, porto: cityID2};
+    let defaultsMainPage = [{city: "lisboa", id: cityID1}, {city: "porto", id: cityID2}];
 
     arrayDefaultMpData.push(defaultsMainPage);
     localStorage.setItem("defaultMainPageCities", JSON.stringify(arrayDefaultMpData));
@@ -81,7 +81,11 @@ function defaultItemsMainPage(data) {
         let icon = data.weather[0].icon;
 
         creatorTemplateCards();
-        
+
+        sendDataToDetails(data);
+
+        document.querySelector(`.deleteDIV${contador-1}`).style.display = "none";
+        document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
         document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
         document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
@@ -98,18 +102,49 @@ function fillFieldsMainPage(data) {
         let icon = data.weather[0].icon;
 
         creatorTemplateCards();
+
+        sendDataToDetails(data);
         
         document.getElementById(`city${contador-1}`).innerHTML = `${data.name} <span style="font-size: 16px;">(${data.sys.country})</span>`;
         document.getElementById(`icon${contador-1}`).setAttribute("src", `https://openweathermap.org/img/wn/${icon}@2x.png`);
         document.getElementById(`temp${contador-1}`).innerHTML = data.main.temp.toFixed(0) + " ºC";
         document.getElementById(`weather-description${contador-1}`).innerHTML = data.weather[0].description;
         
+        if(data.id != arrayDefaultMpData[0][0].id || data.id != arrayDefaultMpData[0][1].id) {
+            let index = document.querySelector(`.downAngle${contador-1}`).classList[4];
+            document.getElementById(`idOfCity${index}`).value = data.id;
+
+            document.querySelector(`.deleteButtonMP${index}`).addEventListener("click", () => {
+                let myId = document.getElementById(`idOfCity${index}`).value;
+                let retrievedData = localStorage.getItem("mainPageCities");
+                let citiesStorage = JSON.parse(retrievedData);
+                
+                for(let j = 0; j < citiesStorage.length; j++) {
+                    if(citiesStorage[j].Id == myId) {
+                        citiesStorage.splice(j, 1);
+                        verifierForCities = 0;
+                    }
+                }
+                localStorage.setItem("mainPageCities", JSON.stringify(citiesStorage));
+                document.getElementById(`cardNumber${index}`).style.display = "none";
+            });
+        }
+        document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
+
+
         addMainPageDataToStorage(data.name, data.sys.country, data.id);
 
         addEventListenerToBtns();
     }
 }
 
+function sendDataToDetails(data) {
+    document.querySelector(`detailsButtonMP${contador}`)
+
+
+
+
+}
 
 function addEventListenerToBtns() {
     let downButtons = document.getElementsByClassName("downAngle");
@@ -157,7 +192,7 @@ function findCity(city) {
                 let json = JSON.parse(req.responseText);
 
                 for(let i = 0; i < json.count; i++) {
-                    if(json.list[i].id === arrayDefaultMpData[0].porto || json.list[i].id === arrayDefaultMpData[0].lisboa) {
+                    if(json.list[i].id === arrayDefaultMpData[0][0].id || json.list[i].id === arrayDefaultMpData[0][1].id) {
                         json.list.splice(i, 1);
                         json.count--;
                         verifierForCities = 1;
@@ -303,7 +338,7 @@ function removeMainPageDataFromStorage(cityID) {
 function creatorTemplateCards() {
 
 let newElement = `
-    <div class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
+    <div id="cardNumber${contador}" class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
         <div class="card citycard text-center ${contador}">
             <div class="card-body">
                 <h4 id="city${contador}" class="card-title"></h4>
@@ -313,7 +348,7 @@ let newElement = `
                 <i class="fas fa-angle-double-down fa-2x downAngle ${contador} downAngle${contador}"></i>
                 <i class="fas fa-angle-double-up fa-2x upAngle ${contador} upAngle${contador}" style="display: none"></i>
                 
-                <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:none;">
+                <div class="buttonGroupCardsDIV${contador} buttonsDIV" style="display:"";">
                     <div class="row">
                         <div class="col-xs col-sm col-md col-lg detailsDIV">
                             <a class="buttonGroupCards detailsButtonMP ${contador} detailsButtonMP${contador}">Detalhes</a>
@@ -323,8 +358,9 @@ let newElement = `
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs col-sm col-md col-lg deleteDIV">
+                        <div class="col-xs col-sm col-md col-lg deleteDIV${contador}">
                             <a class="buttonGroupCards deleteButtonMP ${contador} deleteButtonMP${contador}">Remover</a>
+                            <input id="idOfCity${contador}" type="hidden" value="">
                         </div>
                     </div>
                 </div>
