@@ -116,17 +116,6 @@ footer {
     margin: auto;
     display: inline-block;
 }
-.tdFirstCol {
-    width: 25%;
-}
-
-.firstCol {
-    margin: 5px auto;
-}
-
-.tdSecondCol {
-    width: 25%;
-}
 
 #rotatedArrow {
     margin: 10px;
@@ -138,4 +127,95 @@ footer {
 
 .searchBtn:hover {
     color: #1a1a1a;
+}
+
+/* Details table */
+
+.iHumidity {
+    font-size: 30px; 
+    color: #5b86ff; 
+    display:inline-block;
+    padding: 5px;
+}
+
+.pHumidity {
+    display:inline-block
+}
+
+.iPressure {
+    font-size: 30px; 
+    color: #754600; 
+    display:inline-block;
+    padding: 5px;
+}
+
+.pPressure {
+    display:inline-block
+}
+
+.iTemperature {
+    font-size: 30px; 
+    color: #006ace; 
+    display:inline-block;
+    padding: 5px;
+}
+.pTemperature {
+    display:inline-block
+}
+
+.iCloudy {
+    font-size: 30px; 
+    color: #757575;
+    display:inline-block;
+    padding: 5px;
+}
+
+.pCloudy {
+    display:inline-block
+}
+
+.iWindy {
+    font-size: 30px; 
+    color: #757575;
+    display:inline-block;
+    padding: 5px;
+}
+
+.pWindy {
+    display:inline-block;
+}
+
+.iSunset, .iSunrise {
+    font-size: 30px; 
+    color: #ffa162;
+    display:inline-block;
+    padding: 5px;
+}
+
+.pSunset, .pSunrise {
+    display:inline-block
+}
+
+.firstCol, .secondCol, .thirdCol, .forthCol {
+    display:inline-block;
+    margin: 2%;
+}
+
+.fCol h2, .fCol p {
+    display:inline-block;
+    margin: 0;
+}
+
+.nameCoords {
+    margin: 2% 2%;
+    margin-bottom: 0;
+}
+
+.utcDescri {
+    margin: 3% 4%;
+    margin-bottom: 0;
+}
+
+.iconMaxMin {
+    padding: 20%;
 }

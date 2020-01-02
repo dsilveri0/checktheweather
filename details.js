@@ -128,7 +128,7 @@ function getWeatherByID(id) {
     req.send();
 }
 
-function getTime(unix_time) {
+function getTimeWithWeek(unix_time) {
 
     let time = new Date(unix_time*1000);
 
@@ -148,6 +148,16 @@ function getTime(unix_time) {
     return `${weekday}, ${hour}:${minute}`;
 }
 
+function getTime(unix_time) {
+
+    let time = new Date(unix_time*1000);
+
+    let hour = addZero(time.getHours());
+    let minute = addZero(time.getMinutes());
+
+    return `${hour}:${minute}`;
+}
+
 function addZero(i) {
     if (i < 10) {
       i = `0${i}`;
@@ -157,12 +167,14 @@ function addZero(i) {
 
 function fillFieldDetails(data) {
     let icon = data.weather[0].icon;
-    let time = getTime(data.dt);
+    let time = getTimeWithWeek(data.dt);
+    let sunrise = getTime(data.sys.sunrise);
+    let sunset = getTime(data.sys.sunset);
 
     let detailsCard = `
         <div class="col-xs col-sm col-md" style="margin-bottom: 20px;">           
             <div class="citycard">
-                <table class="table table-borderless">
+                <table class="table table-borderless table-responsive-lg">
                     <thead>
                         <tr>
                             <th scope="col" colspan="2">Detalhes:</th>
@@ -174,49 +186,75 @@ function fillFieldDetails(data) {
                     <tbody>
                         <tr>
                             <th class="text-center" scope="row">
-                                <img class="iconWeather" src="https://openweathermap.org/img/wn/${icon}@2x.png">
-                                <div class="maxTemp">
-                                    <p class="max" center>${data.main.temp_max}º</p>
-                                </div>
-                                <div class="minTemp">
-                                    <p class="min center">${data.main.temp_min}º</p>
+                                <div class="text-center iconMaxMin">
+                                    <img class="iconWeather" src="https://openweathermap.org/img/wn/${icon}@2x.png">
+                                    <div class="maxTemp">
+                                        <p class="max" center>${data.main.temp_max}º</p>
+                                    </div>
+                                    <div class="minTemp">
+                                        <p class="min center">${data.main.temp_min}º</p>
+                                    </div>
                                 </div>
                             </th>
-                            <td class="tdFirstCol">
-                                <div class="firstCol">
-                                    <h2 style="margin:0">${data.name}, ${data.sys.country}</h2>
+                            <td class="row tdFirstCol">
+                                <div class="nameCoords col-xs-6 col-sm-6 col-md">
+                                    <h2 style="">${data.name}, ${data.sys.country}</h2>
                                     <p><small>(Latitude: ${data.coord.lon}, Longitude: ${data.coord.lat})</small></p>
-                                    <p>${time} UTC ${data.timezone}</p>
+                                </div>
+                                <div class="utcDescri col-xs-6 col-sm-6 col-md">
+                                    <h5>${time} UTC ${data.timezone}</h5>
                                     <p>${data.weather[0].main}, ${data.weather[0].description}</p>
                                 </div>
                             </td>
-                            <td class="tdSecondCol">
-                                <div class="secondCol">
-                                    <p>Temperatura: ${data.main.temp} ºC</p>
-                                    <p>Temperatura sentida: ${data.main.feels_like} ºC</p>
-                                    <p>Pressão: ${data.main.pressure} hPa</p>
-                                    <p>Humidade: ${data.main.humidity} %</p>                    
+                            <td class="row tdSecondCol">
+                                <div class="col-xs-6 col-sm-4 col-md-3 firstCol">
+                                    <div>
+                                        <i class="wi wi-thermometer iTemperature"></i>
+                                        <p class="pTemperature">${data.main.temp} ºC</p>
+                                    </div>
+                                    <div>
+                                        <i class="wi wi-thermometer iTemperature"></i>
+                                        <p class="pTemperature">${data.main.feels_like} ºC</p>
+                                    </div>
                                 </div>
-                            </td>
-                            <td class="tdThirdCol">
-                                <div class="thirdCol">
+                                <div class="col-xs-6 col-sm-4 col-md-3 secondCol">
+                                    <div>
+                                        <i class="wi wi-barometer iPressure"></i>
+                                        <p class="pPressure">${data.main.pressure} hPa</p>
+                                    </div>
+                                    <div>
+                                        <i class="wi wi-humidity iHumidity"></i>
+                                        <p class="pHumidity">${data.main.humidity} %</p>                    
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-3 thirdCol">
                                     <p>Visibilidade: ${data.visibility}m</p>
-                                    <p>Nuvens: ${data.clouds.all} %</p>           
-                                    <p>Velocidade do vento: ${data.wind.speed} m/s</p>
-                                    <div class="windDIV">
-                                        Direção do Vento: ${direction(data.wind.deg)}
-                                        <i id="rotatedArrow" class="fas fa-long-arrow-alt-up fa-1x"></i>
+                                    <div>
+                                        <i class="wi wi-cloudy iCloudy"></i>     
+                                        <p class="pCloudy">${data.clouds.all} %</p>   
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-3 forthCol">
+                                    <div>
+                                        <i class="wi wi-strong-wind iWindy"></i>
+                                        <p class="pWindy">${data.wind.speed} m/s</p>
+                                        <div class="windDIV">
+                                            Direção: ${direction(data.wind.deg)}
+                                            <i id="rotatedArrow" class="fas fa-long-arrow-alt-up fa-1x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-3 forthCol">
+                                    <div>
+                                        <i class="wi wi-sunrise iSunrise"></i>
+                                        <p class="pSunrise">${sunrise}</p>
+                                    </div>
+                                    <div>
+                                        <i class="wi wi-sunset iSunset"></i>
+                                        <p class="pSunset">${sunset}</p>
                                     </div>
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"></th>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"></th>
-                            <td></td>
                         </tr>
                     </tbody>
                 </table>
