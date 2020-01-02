@@ -3,13 +3,7 @@ let resultsCont = 0;
 
 window.onload = () => {
 
-// criar função que me permita verificar se o session storage está vazio ou não. caso esteja, executar "funçao coord"
-// senão executar funcao by id, com o id no session storage.
-
     loadDetails();
-
-    //getWeatherByID(2267095);
-    //getWeatherByCoord();
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -27,15 +21,73 @@ window.onload = () => {
 
 function loadDetails() {
     let newID = sessionStorage.getItem("cityID");
-    if(typeof newID != "undefined" || newID != null) {
+
+    if(newID === null || typeof newID === "undefined") {
+
+        getLocation();
+
+    } else if(newID != null || typeof newID != "undefined"){
         getWeatherByID(newID);
-        sessionStorage.clear();
-    } else {
-        // função com as coordenadas
+        sessionStorage.clear();        
     }
 }
 
-/* function getWeatherByCoord(coord) {
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            getWeatherByCoord(`lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+        }, (error) => {
+            if(error.code == error.PERMISSION_DENIED) {
+                getUserData();
+            }
+        });
+    } else {
+        console.log("error");
+    }
+}
+
+function getUserData() {
+    const API_URL = `https://ipinfo.io/geo?token=efeb15b33f1e2b`;
+    let req = new XMLHttpRequest();
+
+    req.open('GET', API_URL);
+    req.onload = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let json = JSON.parse(req.responseText);
+
+                getCity(json.region, json.country);
+
+            } else {
+                console.log('error msg: ' + req.status);
+            }
+        }
+    }
+    req.send();
+}
+
+function getCity(city) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=5cccb144e99fcd50583cc21521086247&cnt=5&lang=pt`;
+    let req = new XMLHttpRequest();
+
+    req.open('GET', API_URL);
+    req.onload = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let json = JSON.parse(req.responseText);
+
+                getWeatherByID(json.id);
+
+            } else {
+                console.log('error msg: ' + req.status);
+            }
+        }
+    }
+    req.send();
+}
+
+
+function getWeatherByCoord(coord) {
     const API_URL = `https://api.openweathermap.org/data/2.5/weather?${coord}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
@@ -53,7 +105,7 @@ function loadDetails() {
         }
     }
     req.send();
-} */
+}
 
 
 function getWeatherByID(id) {
