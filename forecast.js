@@ -3,7 +3,7 @@ let resultsCont = 0;
 
 window.onload = () => {
 
-    loadDetails();
+    loadForecast();
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -19,10 +19,11 @@ window.onload = () => {
     })
 }
 
-function loadDetails() {
+function loadForecast() {
     let newID = sessionStorage.getItem("cityID");
+    console.log(newID)
 
-    if(newID === null || typeof newID === "undefined") {
+    if(newID == null || typeof newID == "undefined") {
 
         getLocation();
 
@@ -87,7 +88,7 @@ function getCity(city) {
 
 
 function getWeatherByCoord(coord) {
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?${coord}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    const API_URL = `https://api.openweathermap.org/data/2.5/forecast?${coord}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
     req.open('GET', API_URL);
@@ -97,6 +98,17 @@ function getWeatherByCoord(coord) {
                 let json = JSON.parse(req.responseText);
 
                 fillFieldDetails(json);
+
+                let data = [];
+                for(let index = 0; index < json.cnt; index++) {
+                    let time = getCustomTime(json.list[index].dt);
+                    data.push(
+                        { "x": time, "y": json.list[index].main.temp }
+                    );
+                    console.log("time: " + data[index].x + " index: " + index);
+                    console.log("temp: " + data[index].y);
+                }
+                createSVG(data);
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -106,9 +118,8 @@ function getWeatherByCoord(coord) {
     req.send();
 }
 
-
 function getWeatherByID(id) {
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    const API_URL = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
     let req = new XMLHttpRequest();
 
     req.open('GET', API_URL);
@@ -118,6 +129,18 @@ function getWeatherByID(id) {
                 let json = JSON.parse(req.responseText);
 
                 fillFieldDetails(json);
+                
+                let data = [];
+                for(let index = 0; index < json.cnt; index++) {
+                    let time = getCustomTime(json.list[index].dt);
+                    data.push(
+                        { "x": time, "y": json.list[index].main.temp }
+                    );
+                    console.log("time: " + data[index].x + " index: " + index);
+                    console.log("temp: " + data[index].y);
+                }
+                createSVG(data);
+
                 sessionStorage.setItem("cityID", json.id);
 
             } else {
@@ -126,6 +149,56 @@ function getWeatherByID(id) {
         }
     }
     req.send();
+}
+
+function createSVG(data) {
+
+    let margin = {top: 20, bottom: 30, left: 50};
+        
+        width = 600 - margin.left,
+        height = 150 - margin.top - margin.bottom;
+
+    let x = d3.scaleTime()
+        .domain([d3.max(data, function(d) { return data[0].x; }), d3.max(data, function(d) { return data[8].x; })])
+        .range([0, width])
+        .nice()
+    
+    let y = d3.scaleLinear()
+        .domain([d3.max(data, function(d) { return data[0].y; }), d3.max(data, function(d) { return data[8].y; })])
+        .range([height, 0]);
+    
+    let xAxis = d3.axisBottom()
+        .scale(x)
+        .tickFormat(d3.timeFormat("%H:%M"))
+
+    let yAxis = d3.axisLeft()
+        .scale(y)
+
+    let area = d3.area()
+        .x(function(d) { return x(d.x); })
+        .y0(height)
+        .y1(function(d) { return y(d.y); });
+
+    let svg = d3.select("#placer").append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "area")
+        .attr("d", area);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
 }
 
 function getTimeWithWeek(unix_time) {
@@ -158,6 +231,14 @@ function getTime(unix_time) {
     return `${hour}:${minute}`;
 }
 
+function getCustomTime(unix_time) {
+
+    let time = new Date(unix_time*1000);
+    let custom = time.getTime();
+
+    return custom;
+}
+
 function addZero(i) {
     if (i < 10) {
       i = `0${i}`;
@@ -166,10 +247,10 @@ function addZero(i) {
 }
 
 function fillFieldDetails(data) {
-    let icon = data.weather[0].icon;
-    let time = getTimeWithWeek(data.dt);
-    let sunrise = getTime(data.sys.sunrise);
-    let sunset = getTime(data.sys.sunset);
+    let icon = data.list[0].weather[0].icon;
+    let time = getTimeWithWeek(data.list[0].dt);
+    let sunrise = getTime(data.city.sunrise);
+    let sunset = getTime(data.city.sunset);
 
     let detailsCard = `
         <div class="col-xs col-sm col-md" style="margin-bottom: 20px;">           
@@ -189,57 +270,56 @@ function fillFieldDetails(data) {
                                 <div class="text-center iconMaxMin">
                                     <img class="iconWeather" src="https://openweathermap.org/img/wn/${icon}@2x.png">
                                     <div class="maxTemp">
-                                        <p class="max" center>${data.main.temp_max}º</p>
+                                        <p class="max" center>${data.list[0].main.temp_max}º</p>
                                     </div>
                                     <div class="minTemp">
-                                        <p class="min center">${data.main.temp_min}º</p>
+                                        <p class="min center">${data.list[0].main.temp_min}º</p>
                                     </div>
                                 </div>
                             </th>
                             <td class="row tdFirstCol">
                                 <div class="nameCoords col-xs-6 col-sm-6 col-md">
-                                    <h2 style="">${data.name}, ${data.sys.country}</h2>
-                                    <p><small>(Latitude: ${data.coord.lon}, Longitude: ${data.coord.lat})</small></p>
+                                    <h2 style="">${data.city.name}, ${data.city.country}</h2>
+                                    <p><small>(Latitude: ${data.city.coord.lon}, Longitude: ${data.city.coord.lat})</small></p>
                                 </div>
                                 <div class="utcDescri col-xs-6 col-sm-6 col-md">
-                                    <h5>${time} UTC ${data.timezone}</h5>
-                                    <p>${data.weather[0].main}, ${data.weather[0].description}</p>
+                                    <h5>${time} UTC ${data.city.timezone}</h5>
+                                    <p>${data.list[0].weather[0].main}, ${data.list[0].weather[0].description}</p>
                                 </div>
                             </td>
                             <td class="row tdSecondCol">
                                 <div class="col-xs-6 col-sm-4 col-md-3 firstCol">
                                     <div>
                                         <i class="wi wi-thermometer iTemperature"></i>
-                                        <p class="pTemperature">${data.main.temp} ºC</p>
+                                        <p class="pTemperature">${data.list[0].main.temp} ºC</p>
                                     </div>
                                     <div>
                                         <i class="wi wi-thermometer iTemperature"></i>
-                                        <p class="pTemperature">${data.main.feels_like} ºC</p>
+                                        <p class="pTemperature">${data.list[0].main.feels_like} ºC</p>
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-4 col-md-3 secondCol">
                                     <div>
                                         <i class="wi wi-barometer iPressure"></i>
-                                        <p class="pPressure">${data.main.pressure} hPa</p>
+                                        <p class="pPressure">${data.list[0].main.pressure} hPa</p>
                                     </div>
                                     <div>
                                         <i class="wi wi-humidity iHumidity"></i>
-                                        <p class="pHumidity">${data.main.humidity} %</p>                    
+                                        <p class="pHumidity">${data.list[0].main.humidity} %</p>                    
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-4 col-md-3 thirdCol">
-                                    <p>Visibilidade: ${data.visibility}m</p>
                                     <div>
                                         <i class="wi wi-cloudy iCloudy"></i>     
-                                        <p class="pCloudy">${data.clouds.all} %</p>   
+                                        <p class="pCloudy">${data.list[0].clouds.all} %</p>   
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-4 col-md-3 forthCol">
                                     <div>
                                         <i class="wi wi-strong-wind iWindy"></i>
-                                        <p class="pWindy">${data.wind.speed} m/s</p>
+                                        <p class="pWindy">${data.list[0].wind.speed} m/s</p>
                                         <div class="windDIV">
-                                            Direção: ${direction(data.wind.deg)}
+                                            Direção: ${direction(data.list[0].wind.deg)}
                                             <i id="rotatedArrow" class="fas fa-long-arrow-alt-up fa-1x"></i>
                                         </div>
                                     </div>
@@ -262,7 +342,7 @@ function fillFieldDetails(data) {
         </div>
     `;
     document.querySelector(".testingDiv").innerHTML = detailsCard;
-    rotate(data.wind.deg);
+    rotate(data.list[0].wind.deg);
 }
 
 function direction(degress) {
@@ -409,3 +489,4 @@ function clearSearchResults(className) {
         elem[0].parentNode.removeChild(elem[0]);
     }
 }
+

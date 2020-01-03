@@ -38,11 +38,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.html">Home</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link detailsButton" href="details.html">Detalhes<span class="sr-only">(current)</span></a>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="forecast.html">Forecast</a>
+                    <a class="nav-link detailsButton" href="details.html">Detalhes</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="forecast.html">Forecast<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Favoritos</a>
@@ -75,6 +75,7 @@
             <div class="col-xs col-sm col-md-2 citiesrow"></div>
             <div class="col-xs col-sm-10 col-md-8 citiesrow">
                 <div class="row testingDiv"></div>
+                <div id="placer"></div>
             </div>
             <div class="col-xs col-sm col-md-2 citiesrow"></div>
         </div>
@@ -83,10 +84,11 @@
         <p class="footer">Projeto de Web-Cliente</p>
     </footer>
     
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/59d1762f8b.js" crossorigin="anonymous"></script>
     <script src="public/bootstrap/js/bootstrap.min.js"></script>
-    <script src="details.js"></script>
+    <script src="forecast.js"></script>
   </body>
 </html>
