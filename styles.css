@@ -220,12 +220,23 @@ footer {
     padding: 20%;
 }
 
-.axis path, .axis line {
+.axis path {
   fill: none;
   stroke: #000000;
   shape-rendering: crispEdges;
 }
 
+.line {
+    fill: none;
+    stroke: #ff733b;
+    stroke-width: 2;
+    shape-rendering: geometricPrecision;
+}
+
 .area { 
-    fill: #688bff;
+    fill: #fddccf;
+}
+
+.aewrwerwrea { 
+    fill: #ff8758;
 }

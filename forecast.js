@@ -156,7 +156,7 @@ function createSVG(data) {
     let margin = {top: 20, bottom: 30, left: 50};
         
         width = 600 - margin.left,
-        height = 150 - margin.top - margin.bottom;
+        height = 200 - margin.top - margin.bottom;
 
     let x = d3.scaleTime()
         .domain([d3.max(data, function(d) { return data[0].x; }), d3.max(data, function(d) { return data[8].x; })])
@@ -164,8 +164,9 @@ function createSVG(data) {
         .nice()
     
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[0].y; }), d3.max(data, function(d) { return data[8].y; })])
-        .range([height, 0]);
+        .domain([d3.max(data, function(d) { return data[8].y-1; }), d3.max(data, function(d) { return data[8].y+2; })])
+        .range([height, 0])
+        .nice();
     
     let xAxis = d3.axisBottom()
         .scale(x)
@@ -173,11 +174,17 @@ function createSVG(data) {
 
     let yAxis = d3.axisLeft()
         .scale(y)
+        .ticks()
+
 
     let area = d3.area()
         .x(function(d) { return x(d.x); })
         .y0(height)
         .y1(function(d) { return y(d.y); });
+
+    let line = d3.line()
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); })
 
     let svg = d3.select("#placer").append("svg")
         .attr("width", width + margin.left)
@@ -190,14 +197,49 @@ function createSVG(data) {
         .attr("class", "area")
         .attr("d", area);
 
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
+//
+    svg.append("g").selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("r", 3)
+        .attr("cx", function(d) {
+            return x(d.x)
+        })
+        .attr("cy", function(d) {
+            return y(d.y)
+        })
+        .attr("fill", "#ff733b")
+        .attr("stroke", "#ff733b")
+
+    svg.append("g").selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", function(d) {
+            return x(d.x) - 20
+        })
+        .attr("y", function(d) {
+            return y(d.y) - 25        })
+        .attr("fill", "black")
+        .attr("font-size", "12px")
+        .text(function(d) {
+            return d.y + " ºC"
+        });
+
+//
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append("g")
+    /* svg.append("g")
         .attr("class", "y axis")
-        .call(yAxis);
+        .call(yAxis); */
 
 }
 
