@@ -164,7 +164,7 @@ function createSVG(data) {
         .nice()
     
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[8].y-1; }), d3.max(data, function(d) { return data[8].y+2; })])
+        .domain([d3.max(data, function(d) { return data[8].y-2; }), d3.max(data, function(d) { return data[8].y+5; })])
         .range([height, 0])
         .nice();
     
@@ -172,10 +172,9 @@ function createSVG(data) {
         .scale(x)
         .tickFormat(d3.timeFormat("%H:%M"))
 
-    let yAxis = d3.axisLeft()
+    /* let yAxis = d3.axisLeft()
         .scale(y)
-        .ticks()
-
+        .ticks() */
 
     let area = d3.area()
         .x(function(d) { return x(d.x); })
@@ -201,7 +200,7 @@ function createSVG(data) {
         .datum(data)
         .attr("class", "line")
         .attr("d", line);
-//
+
     svg.append("g").selectAll("circle")
         .data(data)
         .enter()
@@ -221,17 +220,17 @@ function createSVG(data) {
         .enter()
         .append("text")
         .attr("x", function(d) {
-            return x(d.x) - 20
+            return x(d.x) - 15
         })
         .attr("y", function(d) {
-            return y(d.y) - 25        })
+            return y(d.y) - 20
+        })
         .attr("fill", "black")
         .attr("font-size", "12px")
         .text(function(d) {
-            return d.y + " ºC"
+            return Math.round(d.y)
         });
 
-//
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -327,6 +326,11 @@ function fillFieldDetails(data) {
                                 <div class="utcDescri col-xs-6 col-sm-6 col-md">
                                     <h5>${time} UTC ${data.city.timezone}</h5>
                                     <p>${data.list[0].weather[0].main}, ${data.list[0].weather[0].description}</p>
+                                </div>
+                            </td>
+                            <td class="row">
+                                <div class="nameCoords col-xs-6 col-sm-6 col-md">
+                                    <div id="placer"></div>
                                 </div>
                             </td>
                             <td class="row tdSecondCol">
