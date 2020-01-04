@@ -20,7 +20,7 @@ window.onload = () => {
 }
 
 function loadDetails() {
-    let newID = sessionStorage.getItem("cityID");
+    let newID = sessionStorage.getItem("cityIdDetails");
 
     if(newID === null || typeof newID === "undefined") {
 
@@ -118,7 +118,7 @@ function getWeatherByID(id) {
                 let json = JSON.parse(req.responseText);
 
                 fillFieldDetails(json);
-                sessionStorage.setItem("cityID", json.id);
+                sessionStorage.setItem("cityIdDetails", json.id);
 
             } else {
                 console.log('error msg: ' + req.status);

@@ -20,7 +20,7 @@ window.onload = () => {
 }
 
 function loadForecast() {
-    let newID = sessionStorage.getItem("cityID");
+    let newID = sessionStorage.getItem("cityIdForecast");
     console.log(newID)
 
     if(newID == null || typeof newID == "undefined") {
@@ -141,7 +141,7 @@ function getWeatherByID(id) {
                 }
                 createSVG(data);
 
-                sessionStorage.setItem("cityID", json.id);
+                sessionStorage.setItem("cityIdForecast", json.city.id);
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -151,20 +151,26 @@ function getWeatherByID(id) {
     req.send();
 }
 
+let timeXX = 0;
+let timeXY = 7;
+
+let linearYX, linearYY = 0;
+
+
 function createSVG(data) {
 
-    let margin = {top: 20, bottom: 30, left: 50};
+    let margin = {top: 100, right: 15, bottom: 100, left: 30};
         
-        width = 600 - margin.left,
-        height = 200 - margin.top - margin.bottom;
+        width = 600 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
     let x = d3.scaleTime()
-        .domain([d3.max(data, function(d) { return data[0].x; }), d3.max(data, function(d) { return data[8].x; })])
+        .domain([d3.max(data, function(d) { return data[0].x; }), d3.max(data, function(d) { return data[7].x; })])
         .range([0, width])
         .nice()
     
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[8].y-2; }), d3.max(data, function(d) { return data[8].y+5; })])
+        .domain([d3.max(data, function(d) { return data[0].y-15; }), d3.max(data, function(d) { return data[0].y+15; })])
         .range([height, 0])
         .nice();
     
@@ -186,7 +192,7 @@ function createSVG(data) {
         .y(function(d) { return y(d.y); })
 
     let svg = d3.select("#placer").append("svg")
-        .attr("width", width + margin.left)
+        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -239,6 +245,35 @@ function createSVG(data) {
     /* svg.append("g")
         .attr("class", "y axis")
         .call(yAxis); */
+
+    d3.select("svg").append("rect")
+        .attr("x", 50)
+        .attr("y", 10)
+        .attr("width", 110)
+        .attr("height", 30)
+        .attr("fill", "red")
+        .attr("class", "temperatureButton")
+
+    d3.select("svg").append("rect")
+        .attr("x", 520)
+        .attr("y", 260)
+        .attr("width", 50)
+        .attr("height", 30)
+        .attr("fill", "#ffe7dd")
+        .attr("stroke", "#ff8a58")
+        .attr("class", "advanceTheGraph")
+    
+    d3.select("rect").append("text")
+        .append("text")
+        .attr("fill", "black")
+        .attr("font-size", "12px")
+        .text("hello world")
+        .attr("font-family", "sans-serif")
+
+    d3.select(".advanceTheGraph").on("click", () => {
+        d3.event.preventDefault()
+        console.log("this is an event");
+    });
 
 }
 
