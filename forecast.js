@@ -154,7 +154,8 @@ function getWeatherByID(id) {
 let timeXX = 0;
 let timeXY = 7;
 
-let linearYX, linearYY = 0;
+let linearYX = 0;
+let linearYY = 0;
 
 
 function createSVG(data) {
@@ -234,7 +235,7 @@ function createSVG(data) {
         .attr("fill", "black")
         .attr("font-size", "12px")
         .text(function(d) {
-            return Math.round(d.y)
+            return Math.round(d.y) + "ºC"
         });
 
     svg.append("g")
@@ -251,7 +252,7 @@ function createSVG(data) {
         .attr("y", 10)
         .attr("width", 110)
         .attr("height", 30)
-        .attr("fill", "red")
+        .attr("fill", "#eeeeee")
         .attr("class", "temperatureButton")
 
     d3.select("svg").append("rect")
@@ -262,17 +263,16 @@ function createSVG(data) {
         .attr("fill", "#ffe7dd")
         .attr("stroke", "#ff8a58")
         .attr("class", "advanceTheGraph")
-    
-    d3.select("rect").append("text")
-        .append("text")
-        .attr("fill", "black")
-        .attr("font-size", "12px")
-        .text("hello world")
-        .attr("font-family", "sans-serif")
 
     d3.select(".advanceTheGraph").on("click", () => {
         d3.event.preventDefault()
         console.log("this is an event");
+
+        timeXX++;
+        timeXY++;
+        linearYX++;
+        linearYY++;
+
     });
 
 }
