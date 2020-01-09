@@ -109,7 +109,6 @@ function getWeatherByCoord(coord) {
                     console.log("temp: " + data[index].y);
                 }
                 createSVG(data);
-                daySelectorSVG(data);
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -141,7 +140,6 @@ function getWeatherByID(id) {
                     console.log("temp: " + data[index].y);
                 }
                 createSVG(data);
-                daySelectorSVG(data);
 
                 sessionStorage.setItem("cityIdForecast", json.city.id);
 
@@ -185,8 +183,149 @@ function createSVG(data) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
+        .attr("class", "graphArea")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
+    svg.append("path")
+        .datum(data)
+        .attr("class", "area")
+        .attr("d", area);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
+
+    svg.append("g").selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("r", 3)
+        .attr("cx", function(d) {
+            return x(d.x)
+        })
+        .attr("cy", function(d) {
+            return y(d.y)
+        })
+        .attr("fill", "#ff733b")
+        .attr("stroke", "#ff733b")
+
+    svg.append("g").selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", function(d) {
+            return x(d.x) - 15
+        })
+        .attr("y", function(d) {
+            return y(d.y) - 20
+        })
+        .attr("fill", "black")
+        .attr("font-size", "12px")
+        .attr("class", "degreesClass")
+        .text(function(d) {
+            return Math.round(d.y) + "ºC"
+        });
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+        d3.select("svg").append("rect")
+        .attr("x", 50)
+        .attr("y", 10)
+        .attr("width", 110)
+        .attr("height", 30)
+        .attr("fill", "#eeeeee")
+        .attr("class", "temperatureButton")
+
+    d3.select("svg").append("g").append("text")
+        .attr("x", 60)
+        .attr("y", 30)
+        .attr("fill", "black")
+        .attr("font-size", "15px")
+        .text("Temperatura");
+
+    let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    for(let i = 0; i<weekdays.length; i++) {
+        d3.select("svg").append("rect")
+            .attr("x", 45+(110*i))
+            .attr("y", 230)
+            .attr("width", 90)
+            .attr("height", 110)
+            .attr("fill", "white")
+            .attr("stroke", "#ff8a58")
+            .attr("class", weekdays[i])
+        
+        d3.select("svg").append("g").append("text")
+            .attr("x", 75+(110*i))
+            .attr("y", 250)
+            .attr("fill", "black")
+            .attr("font-size", "15px")
+            .text(`${weekdays[i]}`);
+        
+        d3.select(`.${weekdays[i]}`)
+        .on("click", () => {
+            d3.event.preventDefault()
+            console.log(`this is ${weekdays[i]}`);
+            console.log(data[0].x)
+            updateSVG(data)
+        })
+    }
+}
+
+function updateSVG(data) {
+    d3.select("svg")
+        .selectAll("path")
+        .remove();
+
+    d3.select("svg")
+        .selectAll("circle")
+        .remove();
+
+    d3.select("svg")
+        .selectAll(".degreesClass")
+        .remove();
+
+    d3.select("svg")
+        .selectAll(".axis")
+        .remove();
+
+    let margin = {top: 100, right: 15, bottom: 160, left: 30};   
+        width = 600 - margin.left - margin.right,
+        height = 350 - margin.top - margin.bottom;
+
+    let x = d3.scaleTime()
+        .domain([d3.max(data, function(d) { return data[3].x; }), d3.max(data, function(d) { return data[9].x; })])
+        .range([0, width])
+        .nice()
+
+    let y = d3.scaleLinear()
+        .domain([d3.max(data, function(d) { return data[1].y-15; }), d3.max(data, function(d) { return data[1].y+15; })])
+        .range([height, 0])
+        .nice();
+
+    let xAxis = d3.axisBottom()
+        .scale(x)
+        .tickFormat(d3.timeFormat("%H:%M"))
+
+    let area = d3.area()
+        .x(function(d) { return x(d.x); })
+        .y0(height)
+        .y1(function(d) { return y(d.y); });
+
+    let line = d3.line()
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); })
+
+    let svg = d3.select("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "graphArea")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     svg.append("path")
         .datum(data)
         .attr("class", "area")
@@ -231,78 +370,6 @@ function createSVG(data) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
-}
-
-function daySelectorSVG(data) {
-    d3.select("svg").append("rect")
-        .attr("x", 50)
-        .attr("y", 10)
-        .attr("width", 110)
-        .attr("height", 30)
-        .attr("fill", "#eeeeee")
-        .attr("class", "temperatureButton")
-
-    let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-    for(let i = 0; i<weekdays.length; i++) {
-        d3.select("svg").append("rect")
-            .attr("x", 45+(110*i))
-            .attr("y", 230)
-            .attr("width", 90)
-            .attr("height", 110)
-            .attr("fill", "white")
-            .attr("stroke", "#ff8a58")
-            .attr("class", weekdays[i])
-        
-        d3.select("svg").append("g").append("text")
-            .attr("x", 75+(110*i))
-            .attr("y", 250)
-            .attr("fill", "black")
-            .attr("font-size", "15px")
-            .text(`${weekdays[i]}`);
-        
-        d3.select(`.${weekdays[i]}`)
-        .on("click", () => {
-            d3.event.preventDefault()
-            console.log(`this is ${weekdays[i]}`);
-            console.log(data[0].x)
-            updateSelector(data)
-        })
-    }
-}
-
-function updateSelector(data) {
-    margin = {top: 100, right: 15, bottom: 160, left: 30};   
-        width = 600 - margin.left - margin.right,
-        height = 350 - margin.top - margin.bottom;
-
-    x = d3.scaleTime()
-        .domain([d3.max(data, function(d) { return data[9].x; }), d3.max(data, function(d) { return data[16].x; })])
-        .range([0, width])
-        .nice()
-
-    y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[1].y-15; }), d3.max(data, function(d) { return data[1].y+15; })])
-        .range([height, 0])
-        .nice();
-
-    xAxis = d3.axisBottom()
-        .scale(x)
-        .tickFormat(d3.timeFormat("%H:%M"))
-
-    area = d3.area()
-        .x(function(d) { return x(d.x); })
-        .y0(height)
-        .y1(function(d) { return y(d.y); });
-
-    line = d3.line()
-        .x(function(d) { return x(d.x); })
-        .y(function(d) { return y(d.y); })
-
-    svg = d3.select("svg").enter()
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 }
 
 function getTimeWithWeek(unix_time) {
