@@ -151,19 +151,11 @@ function getWeatherByID(id) {
     req.send();
 }
 
-let timeXX = 0;
-let timeXY = 7;
-
-let linearYX = 0;
-let linearYY = 0;
-
-
+       
 function createSVG(data) {
-
-    let margin = {top: 100, right: 15, bottom: 100, left: 30};
-        
+    let margin = {top: 100, right: 15, bottom: 220, left: 30};   
         width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+        height = 400 - margin.top - margin.bottom;
 
     let x = d3.scaleTime()
         .domain([d3.max(data, function(d) { return data[0].x; }), d3.max(data, function(d) { return data[7].x; })])
@@ -179,10 +171,6 @@ function createSVG(data) {
         .scale(x)
         .tickFormat(d3.timeFormat("%H:%M"))
 
-    /* let yAxis = d3.axisLeft()
-        .scale(y)
-        .ticks() */
-
     let area = d3.area()
         .x(function(d) { return x(d.x); })
         .y0(height)
@@ -195,9 +183,9 @@ function createSVG(data) {
     let svg = d3.select("#placer").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-    .append("g")
+        .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+    
     svg.append("path")
         .datum(data)
         .attr("class", "area")
@@ -243,10 +231,6 @@ function createSVG(data) {
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    /* svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis); */
-
     d3.select("svg").append("rect")
         .attr("x", 50)
         .attr("y", 10)
@@ -255,25 +239,23 @@ function createSVG(data) {
         .attr("fill", "#eeeeee")
         .attr("class", "temperatureButton")
 
-    d3.select("svg").append("rect")
-        .attr("x", 520)
-        .attr("y", 260)
-        .attr("width", 50)
-        .attr("height", 30)
-        .attr("fill", "#ffe7dd")
-        .attr("stroke", "#ff8a58")
-        .attr("class", "advanceTheGraph")
+    let weekdays = ["sunday", "monday", "tuesday", "thursday", "friday"]
 
-    d3.select(".advanceTheGraph").on("click", () => {
-        d3.event.preventDefault()
-        console.log("this is an event");
-
-        timeXX++;
-        timeXY++;
-        linearYX++;
-        linearYY++;
-
-    });
+    for(let i = 0; i<weekdays.length; i++) {
+        d3.select("svg").append("rect")
+            .attr("x", 30+(110*i))
+            .attr("y", 230)
+            .attr("width", 100)
+            .attr("height", 140)
+            .attr("fill", "#f7f7f7")
+            .attr("stroke", "#ff8a58")
+            .attr("class", weekdays[i])
+    
+        d3.select(`.${weekdays[i]}`).on("click", () => {
+            d3.event.preventDefault()
+            console.log(`this is ${weekdays[i]}`);
+        });
+    }
 
 }
 
@@ -285,11 +267,11 @@ function getTimeWithWeek(unix_time) {
     let minute = addZero(time.getMinutes());
     let weekarray = [
         "Domingo",
-        "Segunda",
-        "Terça",
-        "Quarta",
-        "Quinta",
-        "Sexta",
+        "Segunda-feira",
+        "Terça-feira",
+        "Quarta-feira",
+        "Quinta-feira",
+        "Sexta-feira",
         "Sábado"
     ]
     let weekday = weekarray[time.getUTCDay()];
