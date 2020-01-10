@@ -1,21 +1,7 @@
 let contador = 0;
-let arrayMainPageData = [];
+let favoritesList = [];
 
 window.onload = () => {
-    if (contador == 0) {
-        let noFavoritesYet = `
-            <div class="col-xs col-sm col-md text-center" style="margin-bottom: 30px;">           
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Parece que ainda não tens favoritos :(</h4>
-                        <p class="card-text">Clica <a href="index.html">AQUI</a> para começares!</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.querySelector(".testingDiv").innerHTML = noFavoritesYet;
-    }
-
     insertCitiesFromLocalStorage();
 }
 
@@ -118,14 +104,26 @@ function makeButtonsDisappear() {
 
 // insert cities from favorites, which are set on the main page
 function insertCitiesFromLocalStorage() {
-    let retrievedData = localStorage.getItem("mainPageCities");
-    let citiesStorage = JSON.parse(retrievedData);
+    if(localStorage.getItem("favoritesList") != null) {
+        let retrievedData = localStorage.getItem("favoritesList");
+        let favoritesStorage = JSON.parse(retrievedData);
 
-    if (citiesStorage != null) {
-        //contador++;
-        for(let i = 0; i < citiesStorage.length; i++) {
-            getWeatherByID(citiesStorage[i].Id);
+        for(let i = 0; i<favoritesStorage.length; i++) {
+            contador++;
+            getWeatherByID(favoritesStorage[i]);
         }
+    } else {
+        let noFavoritesYet = `
+            <div class="col-xs col-sm col-md text-center" style="margin-bottom: 30px;">           
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Parece que ainda não tens favoritos :(</h4>
+                        <p class="card-text">Clica <a href="index.html">AQUI</a> para começares!</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector(".testingDiv").innerHTML = noFavoritesYet;
     }
 }
 
