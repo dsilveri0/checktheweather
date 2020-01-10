@@ -46,15 +46,20 @@ function fillFieldsMainPage(data) {
 
         document.querySelector(`.deleteButtonMP${index}`).addEventListener("click", () => {
             let myId = document.getElementById(`idOfCity${index}`).value;
-            let retrievedData = localStorage.getItem("mainPageCities");
-            let citiesStorage = JSON.parse(retrievedData);
+            let retrievedData = localStorage.getItem("favoritesList");
+            let favoritesStorage = JSON.parse(retrievedData);
             
-            for(let j = 0; j < citiesStorage.length; j++) {
-                if(citiesStorage[j].Id == myId) {
-                    citiesStorage.splice(j, 1);
+            for(let j = 0; j < favoritesStorage.length; j++) {
+                
+                console.log(typeof favoritesStorage[j])
+                console.log(typeof myId)
+
+                if(favoritesStorage[j] == myId) {
+                    favoritesStorage.splice(j, 1);
+                    contador--
                 }
             }
-            localStorage.setItem("mainPageCities", JSON.stringify(citiesStorage));
+            localStorage.setItem("favoritesList", JSON.stringify(favoritesStorage));
             document.getElementById(`cardNumber${index}`).style.display = "none";
         });
         
