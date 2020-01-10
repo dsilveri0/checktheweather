@@ -259,6 +259,45 @@ footer {
     fill: #fddccf;
 }
 
+.favoritesDiv {
+    margin: 2% 10%;
+}
+
+.favoriteButton {
+    border: none;
+    color: #f5f5f5;
+    background-color: #ff8f8f;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+.favoriteButton:hover {
+    background-color: #ff6a6a;
+    color: #f5f5f5;
+}
+
+.slider {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+
+    scroll-behavior: smooth;
+  }
+
+  .slide {
+    width: 300px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+  .slides > div {
+    scroll-snap-align: start;
+  }
+
 .aewrwerwrea { 
     fill: #ffffff;
 }

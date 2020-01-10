@@ -4,6 +4,7 @@ let resultsCont = 0;
 window.onload = () => {
 
     loadDetails();
+    placeFavorites()
 
     document.querySelector(".search-bar-city").addEventListener("keyup", (event) => {
         if (event.keyCode === 13) {
@@ -409,4 +410,46 @@ function clearSearchResults(className) {
     while(elem[0]) {
         elem[0].parentNode.removeChild(elem[0]);
     }
+}
+
+
+function placeFavorites() {
+    if(localStorage.getItem("favoritesList") != null) {
+        let retrievedData = localStorage.getItem("favoritesList");
+        let favoritesStorage = JSON.parse(retrievedData);
+
+        for(let i = 0; i<favoritesStorage.length; i++) {
+            getWeatherForFavorites(favoritesStorage[i])
+        }
+    }
+}
+
+function getWeatherForFavorites(id) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=5cccb144e99fcd50583cc21521086247&lang=pt`;
+    let req = new XMLHttpRequest();
+
+    req.open('GET', API_URL);
+    req.onload = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let json = JSON.parse(req.responseText);
+                
+                addFavoritesButtons(json)
+
+            } else {
+                console.log('error msg: ' + req.status);
+            }
+        }
+    }
+    req.send();
+}
+
+function addFavoritesButtons(data) {
+
+    let favButton = `
+        <button class="favoriteButton slide ${data.id} favoriteButton${data.id}">${data.name}, ${data.sys.country}</button>
+    `;
+    document.querySelector(".favoritesDiv").insertAdjacentHTML("beforeend", favButton);
+    document.querySelector(`.favoriteButton${data.id}`).addEventListener("click", () => {getWeatherByID(data.id)})
+
 }
