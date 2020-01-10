@@ -21,7 +21,6 @@ window.onload = () => {
 
 function loadForecast() {
     let newID = sessionStorage.getItem("cityIdForecast");
-    console.log(newID)
 
     if(newID == null || typeof newID == "undefined") {
 
@@ -103,15 +102,13 @@ function getWeatherByCoord(coord) {
                 let rawData = [];
                 for(let index = 0; index < json.cnt; index++) {
                     rawData.push(
-                        { "x": json.list[index].dt }
+                        { "x": json.list[index].dt, "allData": json.list[index]}
                     );
 
                     let time = getCustomTime(json.list[index].dt);
                     data.push(
                         { "x": time, "y": json.list[index].main.temp }
                     );
-                    console.log("time: " + data[index].x + " index: " + index);
-                    console.log("temp: " + data[index].y);
                 }
                 createSVG(data, rawData);
 
@@ -139,15 +136,13 @@ function getWeatherByID(id) {
                 let rawData = [];
                 for(let index = 0; index < json.cnt; index++) {
                     rawData.push(
-                        { "x": json.list[index].dt }
+                        { "x": json.list[index].dt, "allData": json.list[index] }
                     );
                         
                     let time = getCustomTime(json.list[index].dt);
                     data.push(
                         { "x": time, "y": json.list[index].main.temp }
                     );
-                    console.log("time: " + data[index].x + " index: " + index);
-                    console.log("temp: " + data[index].y);
                 }
                 createSVG(data, rawData);
 
@@ -243,25 +238,24 @@ function createSVG(data, rawdata) {
         .call(xAxis);
 
         d3.select("svg").append("rect")
-        .attr("x", 50)
-        .attr("y", 10)
-        .attr("width", 110)
+        .attr("x", 30)
+        .attr("y", 5)
+        .attr("width", 187)
         .attr("height", 30)
         .attr("fill", "#eeeeee")
         .attr("class", "temperatureButton")
 
     d3.select("svg").append("g").append("text")
-        .attr("x", 60)
-        .attr("y", 30)
+        .attr("x", 40)
+        .attr("y", 25)
         .attr("fill", "black")
-        .attr("font-size", "15px")
-        .text("Temperatura");
+        .attr("font-size", "16px")
+        .text("Forecast: Temperatura");
 
     let weekdays = [];
     let hoursIndex = [];
     for(j=0; j<rawdata.length; j++) {
-        console.log(`day of the week: ${getWeek(rawdata[j].x)}`)
-        
+
         if(j==0) {
             weekdays.push(getWeek(rawdata[j].x))
         } 
@@ -272,9 +266,27 @@ function createSVG(data, rawdata) {
         }
         hoursIndex.push(getWeek(rawdata[j].x))
     }
-    console.log(hoursIndex);
 
     for(let i = 0; i<weekdays.length-1; i++) {
+        if(i == 0) {
+            d3.select("svg").append("rect")
+            .attr("x", 45+(110*i))
+            .attr("y", 230)
+            .attr("width", 90)
+            .attr("height", 110)
+            .attr("fill", "#fff4f4")
+            .attr("stroke", "#ff8a58")
+            .attr("class", weekdays[i])
+
+            d3.select("svg").append("g").append("text")
+            .attr("x", 290)
+            .attr("y", 25)
+            .attr("fill", "black")
+            .attr("font-size", "16px")
+            .text(`${getTimeWithWeek(rawdata[i].x)}`);
+
+        } else {
+
         d3.select("svg").append("rect")
             .attr("x", 45+(110*i))
             .attr("y", 230)
@@ -283,7 +295,8 @@ function createSVG(data, rawdata) {
             .attr("fill", "white")
             .attr("stroke", "#ff8a58")
             .attr("class", weekdays[i])
-        
+        }
+
         d3.select("svg").append("g").append("text")
             .attr("x", 75+(110*i))
             .attr("y", 250)
@@ -294,8 +307,6 @@ function createSVG(data, rawdata) {
         d3.select(`.${weekdays[i]}`)
         .on("click", () => {
             d3.event.preventDefault()
-            console.log(`this is ${weekdays[i]}`);
-            console.log(data[0].x)
             
             let newArray = []
             let cont = 0
