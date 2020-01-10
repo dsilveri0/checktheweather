@@ -34,19 +34,29 @@ footer {
 }
 
 .homeBtn {
-    color: #2dff38ab;
+    color: #22e22cab;
 }
 
 .homeBtn:hover {
     color: #28be2fab;
 }
 
-.favBtn {
+.nfavBtn {
     color: #ffe602;
 }
 
-.favBtn:hover {
-    color: #e6cf00;
+.nfavBtn:hover {
+    color: #ebd300;
+}
+
+.favBtn {
+    color: #ffe600;
+}
+
+.mpfavBtn, .nmpfavBtn {
+    position: relative;
+    padding-bottom: 30px;
+    color: #ffe602;
 }
 
 .downAngle, .upAngle {
@@ -138,6 +148,10 @@ footer {
 }
 
 /* Details table */
+
+.detailsTitle, .forecastTitle {
+    margin-bottom: 50px;
+}
 
 .iHumidity {
     font-size: 30px; 

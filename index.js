@@ -2,6 +2,7 @@ let contador = 0;
 let resultsCont = 0;
 let arrayMainPageData = [];
 let arrayDefaultMpData = [];
+let favoritesList = [];
 let verifierForCities = 0;
 
 window.onload = () => {
@@ -276,7 +277,35 @@ function callFillAndAddListener(data) {
 
     for(let i = 0; i < resultsLength.length; i++) {
         let eventButtonsSel = document.querySelector(`.homeBtn${i}`);
-        
+        let favButtonSel = document.querySelector(`.nfavBtn${i}`);
+
+        let retrievedData = localStorage.getItem("favoritesList");
+        let favoritesStorage = JSON.parse(retrievedData);
+
+        for(let k = 0; k<favoritesStorage.length; k++) {
+            let values = document.getElementById(`searchResultsID${i}`).value;
+            
+            if(values[i] == favoritesStorage[k]) {
+                document.querySelector(`.favBtn${i}`).style.display = '';
+                document.querySelector(`.nfavBtn${i}`).style.display = 'none';
+            }
+        }
+
+        favButtonSel.addEventListener("click", () => {
+            let values = document.getElementById(`searchResultsID${i}`).value;
+            
+            document.querySelector(`.favBtn${i}`).style.display = '';
+            document.querySelector(`.nfavBtn${i}`).style.display = 'none';
+            
+            let city = "" + values.split(", ").slice(0,1)
+            let country = "" +  values.split(", ").slice(1,2)
+            let id = "" +  values.split(", ").slice(2,3)
+            console.log(`${city},${country},${id}`)
+            
+            insertCitiesOnFavorites(id);
+
+        });
+
         eventButtonsSel.addEventListener("click", () => {
             let values = document.getElementById(`searchResultsID${i}`).value;
             let id = values.split(", ").slice(2,3)
@@ -286,6 +315,24 @@ function callFillAndAddListener(data) {
 
         });
     }
+}
+
+function insertCitiesOnFavorites(id) {
+    if(localStorage.getItem("favoritesList") != null) {
+        let retrievedData = localStorage.getItem("favoritesList");
+        let favoritesStorage = JSON.parse(retrievedData);
+        
+        favoritesList.push(id);
+        favoritesStorage.push(id);
+
+        let unique = [...new Set(favoritesStorage)];
+          
+        localStorage.setItem("favoritesList", JSON.stringify(unique));
+    } else {
+        favoritesList.push(id);
+        localStorage.setItem("favoritesList", JSON.stringify(favoritesList));
+    }
+    
 }
 
 function fillFieldsSearchResults(data) {
@@ -313,7 +360,8 @@ function fillFieldsSearchResults(data) {
                     </div>
                     <div class"col-xs-2 col-sm-3 col-md-2 col-lg-2 groupData" style="margin:${marginStar} auto;">
                         <i class="fas fa-home fa-2x center groupData buttonsResults homeBtn homeBtn${resultsCont}"></i>
-                        <i class="fas fa-star fa-2x center groupData buttonsResults favBtn favBtn${resultsCont}"></i>
+                        <i style="display: none" class="fas fa-star fa-2x center groupData buttonsResults favBtn favBtn${resultsCont}"></i>
+                        <i class="far fa-star fa-2x center groupData buttonsResults nfavBtn nfavBtn${resultsCont}"></i>
 
                         <input type="hidden" id="searchResultsID${resultsCont}" value="${data.list[i].name}, ${data.list[i].sys.country}, ${data.list[i].id}">
                     </div>
@@ -334,18 +382,14 @@ function addMainPageDataToStorage(cityName, countryName, cityID) {
 
 }
 
-function removeMainPageDataFromStorage(cityID) {
-// Removes data on localstorage, i.e: the cities on the main page, and the cities on the favorites tab.
-// May be called when deleting cites from the local storage.
-
-}
-
 function creatorTemplateCards() {
 
 let newElement = `
     <div id="cardNumber${contador}" class="col-xs col-sm-6 col-md-4" style="margin-bottom: 30px;">           
         <div class="card citycard text-center ${contador}">
             <div class="card-body">
+                <i style="display: none" class="fas fa-star fa-2x mpfavBtn mpfavBtn${contador}"></i>
+                <i class="far fa-star fa-2x nmpfavBtn nmpfavBtn${contador}"></i>
                 <h4 id="city${contador}" class="card-title"></h4>
                 <img id="icon${contador}" src="">
                 <p id="temp${contador}" class="card-text"></p>

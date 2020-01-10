@@ -438,7 +438,7 @@ function getWeek(unix_time) {
         "Qua",
         "Qui",
         "Sex",
-        "Sab"
+        "Sáb"
     ]
     let weekday = weekarray[time.getUTCDay()];
 

@@ -8,7 +8,7 @@ window.onload = () => {
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Parece que ainda não tens favoritos :(</h4>
-                        <p class="card-text">Vem <a href="index.html">AQUI</a> para começares!</p>
+                        <p class="card-text">Clica <a href="index.html">AQUI</a> para começares!</p>
                     </div>
                 </div>
             </div>
