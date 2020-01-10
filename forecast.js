@@ -101,6 +101,7 @@ function getWeatherByCoord(coord) {
 
                 let data = [];
                 let rawData = [];
+
                 for(let index = 0; index < json.cnt; index++) {
                     rawData.push(
                         { "x": json.list[index].dt, "allData": json.list[index]}
@@ -135,6 +136,8 @@ function getWeatherByID(id) {
                 
                 let data = [];
                 let rawData = [];
+                
+
                 for(let index = 0; index < json.cnt; index++) {
                     rawData.push(
                         { "x": json.list[index].dt, "allData": json.list[index] }
@@ -566,6 +569,11 @@ function fillFieldDetails(data) {
                             <td class="row">
                                 <div class="nameCoords col-xs-6 col-sm-6 col-md">
                                     <div id="placer"></div>
+                                </div>
+                            </td>
+                            <td class="row">
+                                <div class="nameCoords col-xs-6 col-sm-6 col-md">
+                                    <div id="placer2"></div>
                                 </div>
                             </td>
                         </tr>
