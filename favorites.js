@@ -2,6 +2,20 @@ let contador = 0;
 let arrayMainPageData = [];
 
 window.onload = () => {
+    if (contador == 0) {
+        let noFavoritesYet = `
+            <div class="col-xs col-sm col-md text-center" style="margin-bottom: 30px;">           
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Parece que ainda não tens favoritos :(</h4>
+                        <p class="card-text">Vem <a href="index.html">AQUI</a> para começares!</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector(".testingDiv").innerHTML = noFavoritesYet;
+    }
+
     insertCitiesFromLocalStorage();
 }
 
@@ -26,19 +40,8 @@ function getWeatherByID(id) {
 }
 
 function fillFieldsMainPage(data) {
-    if (contador == 0) {
-        let noFavoritesYet = `
-            <div class="col-xs col-sm col-md text-center" style="margin-bottom: 30px;">           
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Parece que ainda não tens favoritos :(</h4>
-                        <p class="card-text">Vem <a href="index.html">AQUI</a> para começares!</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.querySelector(".testingDiv").innerHTML = noFavoritesYet;
-    } else {
+    if (contador != 0) {
+
         let icon = data.weather[0].icon;
 
         creatorTemplateCards();
