@@ -451,5 +451,4 @@ function addFavoritesButtons(data) {
     `;
     document.querySelector(".favoritesDiv").insertAdjacentHTML("beforeend", favButton);
     document.querySelector(`.favoriteButton${data.id}`).addEventListener("click", () => {getWeatherByID(data.id)})
-
 }

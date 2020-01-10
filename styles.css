@@ -277,21 +277,19 @@ footer {
 }
 
 .slider {
-    width: 300px;
-    height: 300px;
     display: flex;
-    overflow-x: auto;
+    overflow: auto;
 
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
-
     scroll-behavior: smooth;
   }
 
   .slide {
-    width: 300px;
+    width: 140px;
     flex-shrink: 0;
     height: 100%;
+    margin: 5px;
   }
 
   .slides > div {
