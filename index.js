@@ -83,6 +83,28 @@ function defaultItemsMainPage(data) {
 
         creatorTemplateCards();
 
+        if(localStorage.getItem("favoritesList") != null) {
+            let retrievedData = localStorage.getItem("favoritesList");
+            let favoritesStorage = JSON.parse(retrievedData);
+
+            for(let i = 0; i<favoritesStorage.length; i++) {
+                if(data.id == favoritesStorage[i]) {
+                    document.querySelector(`.mpfavBtn${contador-1}`).style.display = '';
+                    document.querySelector(`.nmpfavBtn${contador-1}`).style.display = 'none';
+                }      
+            }
+        }
+        
+        document.querySelector(`.nmpfavBtn${contador-1}`).addEventListener("click", (index) => {
+            insertCitiesOnFavorites(data.id)
+            console.log(index.toElement.classList[4])
+            let btnIndex = index.toElement.classList[4];
+            let hiddenIndex = btnIndex.slice(1)
+
+            document.querySelector(`.${hiddenIndex}`).style.display = '';
+            document.querySelector(`.${btnIndex}`).style.display = 'none';
+        });
+
         document.querySelector(`.detailsButtonMP${contador-1}`).addEventListener("click", sendDataToDetails(data));
         document.querySelector(`.forecastButtonMP${contador-1}`).addEventListener("click", sendDataToForecast(data));
 
@@ -104,6 +126,28 @@ function fillFieldsMainPage(data) {
         let icon = data.weather[0].icon;
 
         creatorTemplateCards();
+
+        if(localStorage.getItem("favoritesList") != null) {
+            let retrievedData = localStorage.getItem("favoritesList");
+            let favoritesStorage = JSON.parse(retrievedData);
+
+            for(let i = 0; i<favoritesStorage.length; i++) {
+                if(data.id == favoritesStorage[i]) {
+                    document.querySelector(`.mpfavBtn${contador-1}`).style.display = '';
+                    document.querySelector(`.nmpfavBtn${contador-1}`).style.display = 'none';
+                }      
+            }
+        }
+        
+        document.querySelector(`.nmpfavBtn${contador-1}`).addEventListener("click", (index) => {
+            insertCitiesOnFavorites(data.id)
+            console.log(index.toElement.classList[4])
+            let btnIndex = index.toElement.classList[4];
+            let hiddenIndex = btnIndex.slice(1)
+
+            document.querySelector(`.${hiddenIndex}`).style.display = '';
+            document.querySelector(`.${btnIndex}`).style.display = 'none';
+        });
 
         document.querySelector(`.detailsButtonMP${contador-1}`).addEventListener("click", sendDataToDetails(data));
         document.querySelector(`.forecastButtonMP${contador-1}`).addEventListener("click", sendDataToForecast(data));
@@ -278,16 +322,19 @@ function callFillAndAddListener(data) {
     for(let i = 0; i < resultsLength.length; i++) {
         let eventButtonsSel = document.querySelector(`.homeBtn${i}`);
         let favButtonSel = document.querySelector(`.nfavBtn${i}`);
-
-        let retrievedData = localStorage.getItem("favoritesList");
-        let favoritesStorage = JSON.parse(retrievedData);
-
-        for(let k = 0; k<favoritesStorage.length; k++) {
-            let values = document.getElementById(`searchResultsID${i}`).value;
+        
+        if(localStorage.getItem("favoritesList") != null) {
+            let retrievedData = localStorage.getItem("favoritesList");
+            let favoritesStorage = JSON.parse(retrievedData);
             
-            if(values[i] == favoritesStorage[k]) {
-                document.querySelector(`.favBtn${i}`).style.display = '';
-                document.querySelector(`.nfavBtn${i}`).style.display = 'none';
+            for(let k = 0; k<favoritesStorage.length; k++) {
+                let values = document.getElementById(`searchResultsID${i}`).value;
+
+                let id = "" +  values.split(", ").slice(2,3)
+                if(id == favoritesStorage[k]) {
+                    document.querySelector(`.favBtn${i}`).style.display = '';
+                    document.querySelector(`.nfavBtn${i}`).style.display = 'none';
+                }
             }
         }
 
@@ -326,13 +373,12 @@ function insertCitiesOnFavorites(id) {
         favoritesStorage.push(id);
 
         let unique = [...new Set(favoritesStorage)];
-          
+        
         localStorage.setItem("favoritesList", JSON.stringify(unique));
     } else {
         favoritesList.push(id);
         localStorage.setItem("favoritesList", JSON.stringify(favoritesList));
     }
-    
 }
 
 function fillFieldsSearchResults(data) {
