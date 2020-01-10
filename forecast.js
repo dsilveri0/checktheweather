@@ -100,7 +100,12 @@ function getWeatherByCoord(coord) {
                 fillFieldDetails(json);
 
                 let data = [];
+                let rawData = [];
                 for(let index = 0; index < json.cnt; index++) {
+                    rawData.push(
+                        { "x": json.list[index].dt }
+                    );
+
                     let time = getCustomTime(json.list[index].dt);
                     data.push(
                         { "x": time, "y": json.list[index].main.temp }
@@ -108,7 +113,7 @@ function getWeatherByCoord(coord) {
                     console.log("time: " + data[index].x + " index: " + index);
                     console.log("temp: " + data[index].y);
                 }
-                createSVG(data);
+                createSVG(data, rawData);
 
             } else {
                 console.log('error msg: ' + req.status);
@@ -131,7 +136,12 @@ function getWeatherByID(id) {
                 fillFieldDetails(json);
                 
                 let data = [];
+                let rawData = [];
                 for(let index = 0; index < json.cnt; index++) {
+                    rawData.push(
+                        { "x": json.list[index].dt }
+                    );
+                        
                     let time = getCustomTime(json.list[index].dt);
                     data.push(
                         { "x": time, "y": json.list[index].main.temp }
@@ -139,7 +149,7 @@ function getWeatherByID(id) {
                     console.log("time: " + data[index].x + " index: " + index);
                     console.log("temp: " + data[index].y);
                 }
-                createSVG(data);
+                createSVG(data, rawData);
 
                 sessionStorage.setItem("cityIdForecast", json.city.id);
 
@@ -151,7 +161,7 @@ function getWeatherByID(id) {
     req.send();
 }
 
-function createSVG(data) {
+function createSVG(data, rawdata) {
     let margin = {top: 100, right: 15, bottom: 160, left: 30};   
         width = 600 - margin.left - margin.right,
         height = 350 - margin.top - margin.bottom;
@@ -247,8 +257,24 @@ function createSVG(data) {
         .attr("font-size", "15px")
         .text("Temperatura");
 
-    let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-    for(let i = 0; i<weekdays.length; i++) {
+    let weekdays = [];
+    let hoursIndex = [];
+    for(j=0; j<rawdata.length; j++) {
+        console.log(`day of the week: ${getWeek(rawdata[j].x)}`)
+        
+        if(j==0) {
+            weekdays.push(getWeek(rawdata[j].x))
+        } 
+        if(j>0) {
+            if(getWeek(rawdata[j].x) != getWeek(rawdata[j-1].x)) {
+                weekdays.push(getWeek(rawdata[j].x))
+            }
+        }
+        hoursIndex.push(getWeek(rawdata[j].x))
+    }
+    console.log(hoursIndex);
+
+    for(let i = 0; i<weekdays.length-1; i++) {
         d3.select("svg").append("rect")
             .attr("x", 45+(110*i))
             .attr("y", 230)
@@ -264,18 +290,34 @@ function createSVG(data) {
             .attr("fill", "black")
             .attr("font-size", "15px")
             .text(`${weekdays[i]}`);
-        
+
         d3.select(`.${weekdays[i]}`)
         .on("click", () => {
             d3.event.preventDefault()
             console.log(`this is ${weekdays[i]}`);
             console.log(data[0].x)
-            updateSVG(data)
+            
+            let newArray = []
+            let cont = 0
+            for(let v = 0; v<hoursIndex.length; v++) {
+                if(weekdays[i] == hoursIndex[v]) {
+                    cont++
+                    newArray.push(v);
+                }
+            }
+            firstElement = newArray[0];
+            lastElement = firstElement+cont;
+            linear = i;
+
+            d3.select(`.${weekdays[i]}`)
+                .attr("fill", "#fff4f4")
+
+            updateSVG(data, firstElement, lastElement, linear, weekdays)
         })
     }
 }
 
-function updateSVG(data) {
+function updateSVG(data, xx, xy, yy, weekdays) {
     d3.select("svg")
         .selectAll("path")
         .remove();
@@ -297,12 +339,12 @@ function updateSVG(data) {
         height = 350 - margin.top - margin.bottom;
 
     let x = d3.scaleTime()
-        .domain([d3.max(data, function(d) { return data[3].x; }), d3.max(data, function(d) { return data[9].x; })])
+        .domain([d3.max(data, function(d) { return data[xx].x; }), d3.max(data, function(d) { return data[xy].x; })])
         .range([0, width])
         .nice()
 
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[1].y-15; }), d3.max(data, function(d) { return data[1].y+15; })])
+        .domain([d3.max(data, function(d) { return data[yy].y-15; }), d3.max(data, function(d) { return data[yy].y+15; })])
         .range([height, 0])
         .nice();
 
@@ -362,6 +404,7 @@ function updateSVG(data) {
         })
         .attr("fill", "black")
         .attr("font-size", "12px")
+        .attr("class", "degreesClass")
         .text(function(d) {
             return Math.round(d.y) + "ºC"
         });
@@ -370,6 +413,30 @@ function updateSVG(data) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
+
+    for(let i = 0; i<weekdays.length-1; i++) {
+        if(i != yy) {
+            d3.select(`.${weekdays[i]}`)
+                .attr("fill", "#ffffff")
+        }
+    }
+}
+
+function getWeek(unix_time) {
+    let time = new Date(unix_time*1000);
+
+    let weekarray = [
+        "Dom",
+        "Seg",
+        "Ter",
+        "Qua",
+        "Qui",
+        "Sex",
+        "Sab"
+    ]
+    let weekday = weekarray[time.getUTCDay()];
+
+    return `${weekday}`;
 }
 
 function getTimeWithWeek(unix_time) {
