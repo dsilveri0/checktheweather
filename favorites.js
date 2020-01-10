@@ -37,7 +37,7 @@ function fillFieldsMainPage(data) {
                 </div>
             </div>
         `;
-        document.querySelector(".testingDiv").insertAdjacentHTML("beforeend", noFavoritesYet);
+        document.querySelector(".testingDiv").innerHTML = noFavoritesYet;
     } else {
         let icon = data.weather[0].icon;
 
