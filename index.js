@@ -282,10 +282,7 @@ function callFillAndAddListener(data) {
             let id = values.split(", ").slice(2,3)
 
             getWeatherByID(id);
-            
-            /* let city = values.split(", ").slice(0,1);
-            let country = values.split(", ").slice(1,2); */
-            /* console.log(`${city} ${country} ${id}`); */
+            $('.modal').modal('hide');
 
         });
     }

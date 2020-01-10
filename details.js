@@ -362,6 +362,7 @@ function callFillAndAddListener(data) {
             let id = values.split(", ").slice(2,3)
 
             getWeatherByID(id);
+            $('.modal').modal('hide');
 
         });
     }

@@ -167,7 +167,7 @@ function createSVG(data, rawdata) {
         .nice()
     
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[0].y-15; }), d3.max(data, function(d) { return data[0].y+15; })])
+        .domain([d3.max(data, function(d) { return data[0].y-30; }), d3.max(data, function(d) { return data[0].y+15; })])
         .range([height, 0])
         .nice();
     
@@ -262,6 +262,7 @@ function createSVG(data, rawdata) {
         if(j>0) {
             if(getWeek(rawdata[j].x) != getWeek(rawdata[j-1].x)) {
                 weekdays.push(getWeek(rawdata[j].x))
+
             }
         }
         hoursIndex.push(getWeek(rawdata[j].x))
@@ -273,17 +274,10 @@ function createSVG(data, rawdata) {
             .attr("x", 45+(110*i))
             .attr("y", 230)
             .attr("width", 90)
-            .attr("height", 110)
+            .attr("height", 30)
             .attr("fill", "#fff4f4")
             .attr("stroke", "#ff8a58")
             .attr("class", weekdays[i])
-
-            d3.select("svg").append("g").append("text")
-            .attr("x", 290)
-            .attr("y", 25)
-            .attr("fill", "black")
-            .attr("font-size", "16px")
-            .text(`${getTimeWithWeek(rawdata[i].x)}`);
 
         } else {
 
@@ -291,7 +285,7 @@ function createSVG(data, rawdata) {
             .attr("x", 45+(110*i))
             .attr("y", 230)
             .attr("width", 90)
-            .attr("height", 110)
+            .attr("height", 30)
             .attr("fill", "white")
             .attr("stroke", "#ff8a58")
             .attr("class", weekdays[i])
@@ -316,6 +310,7 @@ function createSVG(data, rawdata) {
                     newArray.push(v);
                 }
             }
+
             firstElement = newArray[0];
             lastElement = firstElement+cont;
             linear = i;
@@ -355,7 +350,7 @@ function updateSVG(data, xx, xy, yy, weekdays) {
         .nice()
 
     let y = d3.scaleLinear()
-        .domain([d3.max(data, function(d) { return data[yy].y-15; }), d3.max(data, function(d) { return data[yy].y+15; })])
+        .domain([d3.max(data, function(d) { return data[yy].y-30; }), d3.max(data, function(d) { return data[yy].y+15; })])
         .range([height, 0])
         .nice();
 
@@ -488,6 +483,44 @@ function getCustomTime(unix_time) {
     return custom;
 }
 
+function getCompleteDate(unix_time) {
+
+    let time = new Date(unix_time*1000);
+    
+    let monthObject = [
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dec"
+    ]
+   
+    let weekObject = [
+        "Domingo",
+        "Segunda-feira",
+        "Terça-feira",
+        "Quarta-feira",
+        "Quinta-feira",
+        "Sexta-feira",
+        "Sábado"
+    ]
+
+    let week = weekObject[time.getUTCDay()];
+    let hora = addZero(time.getHours());
+    let minute = addZero(time.getMinutes());
+    let month = monthObject[time.getMonth()];
+    let day = addZero(time.getDate());
+
+    return `${hora}:${minute} ${month} ${day} (${week})`;
+}
+
 function addZero(i) {
     if (i < 10) {
       i = `0${i}`;
@@ -505,14 +538,7 @@ function fillFieldDetails(data) {
         <div class="col-xs col-sm col-md" style="margin-bottom: 20px;">           
             <div class="citycard">
                 <table class="table table-borderless table-responsive-lg">
-                    <thead>
-                        <tr>
-                            <th scope="col" colspan="2">Detalhes:</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
+                    <thead></thead>
                     <tbody>
                         <tr>
                             <th class="text-center" scope="row">
@@ -541,54 +567,6 @@ function fillFieldDetails(data) {
                                     <div id="placer"></div>
                                 </div>
                             </td>
-                            <td class="row tdSecondCol">
-                                <div class="col-xs-6 col-sm-4 col-md-3 firstCol">
-                                    <div>
-                                        <i class="wi wi-thermometer iTemperature"></i>
-                                        <p class="pTemperature">${data.list[0].main.temp} ºC</p>
-                                    </div>
-                                    <div>
-                                        <i class="wi wi-thermometer iTemperature"></i>
-                                        <p class="pTemperature">${data.list[0].main.feels_like} ºC</p>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 secondCol">
-                                    <div>
-                                        <i class="wi wi-barometer iPressure"></i>
-                                        <p class="pPressure">${data.list[0].main.pressure} hPa</p>
-                                    </div>
-                                    <div>
-                                        <i class="wi wi-humidity iHumidity"></i>
-                                        <p class="pHumidity">${data.list[0].main.humidity} %</p>                    
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 thirdCol">
-                                    <div>
-                                        <i class="wi wi-cloudy iCloudy"></i>     
-                                        <p class="pCloudy">${data.list[0].clouds.all} %</p>   
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 forthCol">
-                                    <div>
-                                        <i class="wi wi-strong-wind iWindy"></i>
-                                        <p class="pWindy">${data.list[0].wind.speed} m/s</p>
-                                        <div class="windDIV">
-                                            Direção: ${direction(data.list[0].wind.deg)}
-                                            <i id="rotatedArrow" class="fas fa-long-arrow-alt-up fa-1x"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 forthCol">
-                                    <div>
-                                        <i class="wi wi-sunrise iSunrise"></i>
-                                        <p class="pSunrise">${sunrise}</p>
-                                    </div>
-                                    <div>
-                                        <i class="wi wi-sunset iSunset"></i>
-                                        <p class="pSunset">${sunset}</p>
-                                    </div>
-                                </div>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -596,37 +574,6 @@ function fillFieldDetails(data) {
         </div>
     `;
     document.querySelector(".testingDiv").innerHTML = detailsCard;
-    rotate(data.list[0].wind.deg);
-}
-
-function direction(degress) {
-    if (degress === 0) {
-        return "S";
-    }else if (degress > 0 && degress < 90) {
-        return "SW";
-    }
-    else if (degress === 90) {
-        return "W";
-    }
-    else if (degress > 90 && degress < 180) {
-        return "NW";
-    }
-    else if (degress === 180) {
-        return "N";
-    }
-    else if (degress > 180 && degress < 270) {
-        return "NE";
-    }
-    else if (degress === 270) {
-        return "E";
-    }
-    else if (degress > 270 && degress < 360) {
-        return "SE";
-    }
-}
-
-function rotate(degrees) {
-    document.getElementById("rotatedArrow").setAttribute("style", `-webkit-transform:rotate(${degrees}deg)`);
 }
 
 function findCity(city) {
@@ -696,6 +643,7 @@ function callFillAndAddListener(data) {
             let id = values.split(", ").slice(2,3)
 
             getWeatherByID(id);
+            $('.modal').modal('hide');
 
         });
     }
