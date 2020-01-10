@@ -33,12 +33,20 @@ footer {
     cursor: pointer; 
 }
 
-.homeBtn:hover {
+.homeBtn {
     color: #2dff38ab;
 }
 
-.favBtn:hover {
+.homeBtn:hover {
+    color: #28be2fab;
+}
+
+.favBtn {
     color: #ffe602;
+}
+
+.favBtn:hover {
+    color: #e6cf00;
 }
 
 .downAngle, .upAngle {
