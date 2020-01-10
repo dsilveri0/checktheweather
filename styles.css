@@ -299,3 +299,11 @@ footer {
 .aewrwerwrea { 
     fill: #3b48ff;
 }
+
+.measureButtons {
+    margin: 2px;
+}
+
+.locationButton {
+    margin: 5px;
+}

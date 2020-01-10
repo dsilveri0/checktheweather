@@ -1,6 +1,31 @@
 let verifierForCities = 0;
 let resultsCont = 0;
 
+if(localStorage.getItem("measureSystem") != null) {
+    let retrievedData = localStorage.getItem("measureSystem");
+
+    currentSystem = retrievedData[0].system;
+    currentSign = retrievedData[0].signal;
+
+} else {
+
+    currentSystem = "metric";
+    currentSign = document.querySelector(".measureButtonsC").textContent;
+
+}
+
+document.querySelector(".measureButtonsC").addEventListener("click", () => {
+
+    let currentSystem = [{system: "metric", signal: "ºC"}]
+    localStorage.setItem("measureSystem", JSON.stringify(currentSystem));
+});
+
+document.querySelector(".measureButtonsF").addEventListener("click", () => {
+    let currentSystem = [{system: "imperial", signal: "ºF"}]
+    localStorage.setItem("measureSystem", JSON.stringify(currentSystem));
+});
+
+
 window.onload = () => {
 
     loadForecast();
