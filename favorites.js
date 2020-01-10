@@ -2,7 +2,9 @@ let contador = 0;
 let favoritesList = [];
 
 window.onload = () => {
+
     insertCitiesFromLocalStorage();
+    checkForFavorites()
 }
 
 function getWeatherByID(id) {
@@ -50,21 +52,18 @@ function fillFieldsMainPage(data) {
             let favoritesStorage = JSON.parse(retrievedData);
             
             for(let j = 0; j < favoritesStorage.length; j++) {
-                
-                console.log(typeof favoritesStorage[j])
-                console.log(typeof myId)
-
                 if(favoritesStorage[j] == myId) {
                     favoritesStorage.splice(j, 1);
-                    contador--
+                    contador = contador - 1;
+                    console.log(contador)
+                    checkForFavorites()
                 }
             }
             localStorage.setItem("favoritesList", JSON.stringify(favoritesStorage));
             document.getElementById(`cardNumber${index}`).style.display = "none";
         });
-        
-        document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
 
+        document.querySelector(`.buttonGroupCardsDIV${contador-1}`).style.display = "none";
         addEventListenerToBtns();
     }
 }
@@ -114,10 +113,16 @@ function insertCitiesFromLocalStorage() {
         let favoritesStorage = JSON.parse(retrievedData);
 
         for(let i = 0; i<favoritesStorage.length; i++) {
-            contador++;
+            contador = contador + 1;
             getWeatherByID(favoritesStorage[i]);
         }
     } else {
+        checkForFavorites()
+    }
+}
+
+function checkForFavorites() {
+    if(contador == 0) {
         let noFavoritesYet = `
             <div class="col-xs col-sm col-md text-center" style="margin-bottom: 30px;">           
                 <div class="card">
